@@ -1,0 +1,68 @@
+CREATE TABLE COMPANY (
+                         CompanyID INT PRIMARY KEY,
+                         Name VARCHAR(255) NOT NULL,
+                         Location VARCHAR(255),
+                         ContactInfo VARCHAR(255),
+                         Industry VARCHAR(255),
+                         Website VARCHAR(255)
+);
+
+CREATE TABLE PROJECT (
+                         ProjectID INT PRIMARY KEY,
+                         Name VARCHAR(255) NOT NULL,
+                         Description TEXT,
+                         Priority INT,
+                         StartDate DATE,
+                         EndDate DATE,
+                         Budget DECIMAL(10, 2),
+                         Status VARCHAR(50),
+                         CompanyID INT NOT NULL,
+                         FOREIGN KEY (CompanyID) REFERENCES COMPANY(CompanyID)
+);
+
+CREATE TABLE MEMBER (
+                        MemberID INT PRIMARY KEY,
+                        Name VARCHAR(255) NOT NULL,
+                        Email VARCHAR(255) UNIQUE NOT NULL,
+                        Skill TEXT,
+                        Role VARCHAR(50),
+                        Availability BOOLEAN,
+                        CompanyID INT NOT NULL,
+                        FOREIGN KEY (CompanyID) REFERENCES COMPANY(CompanyID)
+);
+
+CREATE TABLE MANAGER (
+                         ManagerID INT PRIMARY KEY,
+                         Name VARCHAR(255) NOT NULL,
+                         Email VARCHAR(255) UNIQUE NOT NULL,
+                         AdditionalResponsibility TEXT,
+                         MemberID INT UNIQUE,
+                         FOREIGN KEY (MemberID) REFERENCES MEMBER(MemberID)
+);
+
+CREATE TABLE PROJECT_UPDATE (
+                                UID INT PRIMARY KEY,
+                                TimeStamp DATETIME NOT NULL,
+                                Type VARCHAR(50),
+                                Status VARCHAR(50),
+                                ProjectID INT NOT NULL,
+                                ManagerID INT NOT NULL,
+                                FOREIGN KEY (ProjectID) REFERENCES PROJECT(ProjectID),
+                                FOREIGN KEY (ManagerID) REFERENCES MANAGER(ManagerID)
+);
+
+CREATE TABLE WORKS_FOR (
+                           MemberID INT NOT NULL,
+                           ProjectID INT NOT NULL,
+                           PRIMARY KEY (MemberID, ProjectID),
+                           FOREIGN KEY (MemberID) REFERENCES MEMBER(MemberID),
+                           FOREIGN KEY (ProjectID) REFERENCES PROJECT(ProjectID)
+);
+
+CREATE TABLE HANDLED_BY (
+                            ManagerID INT NOT NULL,
+                            ProjectID INT NOT NULL,
+                            PRIMARY KEY (ManagerID, ProjectID),
+                            FOREIGN KEY (ManagerID) REFERENCES MANAGER(ManagerID),
+                            FOREIGN KEY (ProjectID) REFERENCES PROJECT(ProjectID)
+);
