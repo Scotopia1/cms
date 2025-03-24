@@ -1,94 +1,59 @@
-const Company = require("../models/company");
+const db = require('../config/db');
+const Company = require('../models/companyModel');
 
 class CompanyRepository {
-
+    /**
+     * Method to create a company
+     * @returns createdCompany
+     * @param company
+     */
     static async createCompany(company) {
-
         try {
-            return await Company.create({
-                CompanyID: company.CompanyID,
-                Name: company.Name,
-                Location: company.Location,
-                ContactInfo: company.ContactInfo,
-                Industry: company.Industry,
-                Website: company.Website
-            });
+            if (await this.companyExist(company.name)) {
+                return;
+            }
+            let sql = `INSERT INTO company
+                           (CompanyID, Name, Location, ContactInfo, Industry, Website)
+                       VALUES (?, ?, ?, ?, ?, ?)`;
+
+            const {affectedRows} = await db.query(sql, [company.Name, company.Location, company.ContactInfo,
+                company.Industry, company.Website]);
+            return {
+                affectedRows
+            }
         } catch (e) {
+            // propagate an error
             throw new Error(e);
         }
     }
 
-    static async getCompanies() {
+    static async readCompany(id) {
+        let sql = `SELECT *
+                   FROM company
+                   WHERE CompanyID = ${id}`;
+        const rows = await db.query(sql);
+        return Company.fromRow(rows[0]);
+    }
+
+    static async readCompanies() {
         try {
-            return await Company.findAll();
+            const rows = await db.query('SELECT * FROM company');
+            return rows.map(Company.fromRow);
         } catch (e) {
-            throw new Error(e);
+            // propagate an error
+            throw new Error(e.sqlMessage);
         }
     }
 
-    static async getCompanybyName(name) {
-        try {
-            return await Company.findOne({where: {Name: name}});
-        } catch (e) {
-            throw new Error(e);
-        }
-    }
-
-    static async getCompanyDetails(id) {
-        try {
-            return await Company.findByPk(id);
-        } catch (e) {
-            throw new Error(e);
-        }
-    }
-
-    static async changeCompanyName(id, name) {
-        try {
-            return await Company.update({Name: name}, {where: {CompanyID: id}});
-        } catch (e) {
-            throw new Error(e);
-        }
-    }
-
-    static async changeCompanyLocation(id, location) {
-        try {
-            return await Company.update({Location: location}, {where: {CompanyID: id}});
-        } catch (e) {
-            throw new Error(e);
-        }
-    }
-
-    static async changeCompanyContactInfo(id, contactInfo) {
-        try {
-            return await Company.update({ContactInfo: contactInfo}, {where: {CompanyID: id}});
-        } catch (e) {
-            throw new Error(e);
-        }
-    }
-
-    static async changeCompanyIndustry(id, industry) {
-        try {
-            return await Company.update({Industry: industry}, {where: {CompanyID: id}});
-        } catch (e) {
-            throw new Error(e);
-        }
-    }
-
-    static async editCompanyWebsite(id, website) {
-        try {
-            return await Company.update({Website: website}, {where: {CompanyID: id}});
-        } catch (e) {
-            throw new Error(e);
-        }
+    static async companyExist(name) {
+        let sql = `SELECT * FROM company WHERE Name = '${name}'`;
+        const rows = await db.query(sql);
+        return rows.length > 0;
     }
 
     static async deleteCompany(id) {
-        try {
-            return await Company.destroy({where: {CompanyID: id}});
-        } catch (e) {
-            throw new Error(e);
-        }
+        let sql = 'DELETE FROM company WHERE CompanyID = ?';
+        const [result] = await db.query(sql, [id]);
+        return result;
     }
 }
-
-module.exports = CompanyRepository;
