@@ -3,6 +3,18 @@ const sequelize = require('../config/db-sequelize');
 const moment = require("moment");
 
 class CompanyModel extends Model {
+    constructor(Name, Location, ContactInfo, Industry, Website) {
+        super();
+        this.Name = Name;
+        this.Location = Location;
+        this.ContactInfo = ContactInfo;
+        this.Industry = Industry;
+        this.Website = Website;
+    }
+
+    static fromRow(row) {
+        return new CompanyModel(row);
+    }
 }
 
 CompanyModel.init({

@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const Company = require('../models/companyModel');
+const CompanyModel = require('../models/companyModel');
 
 class CompanyRepository {
     /**
@@ -32,16 +32,16 @@ class CompanyRepository {
                    FROM company
                    WHERE CompanyID = ${id}`;
         const rows = await db.query(sql);
-        return Company.fromRow(rows[0]);
+        return CompanyModel.fromRow(rows[0]);
     }
 
     static async readCompanies() {
         try {
-            const rows = await db.query('SELECT * FROM company');
-            return rows.map(Company.fromRow);
-        } catch (e) {
-            // propagate an error
-            throw new Error(e.sqlMessage);
+            let sql = 'SELECT * FROM company';
+            const rows = await db.query(sql);
+            return rows.map(CompanyModel.fromRow);
+        }catch (e) {
+            throw new Error(e);
         }
     }
 
@@ -56,4 +56,72 @@ class CompanyRepository {
         const [result] = await db.query(sql, [id]);
         return result;
     }
+
+    static async changeCompanyName(id, name) {
+        let sql = `UPDATE company
+                   SET Name = ?
+                   WHERE CompanyID = ?`;
+        const {affectedRows} = await db.query(sql, [name, id]);
+        return {
+            affectedRows
+        }
+    }
+
+    static async changeCompanyLocation(id, location) {
+        let sql = `UPDATE company
+                   SET Location = ?
+                   WHERE CompanyID = ?`;
+        const {affectedRows} = await db.query(sql, [location, id]);
+        return {
+            affectedRows
+        }
+    }
+
+    static async changeCompanyContactInfo(id, contactInfo) {
+        let sql = `UPDATE company
+                   SET ContactInfo = ?
+                   WHERE CompanyID = ?`;
+        const {affectedRows} = await db.query(sql, [contactInfo, id]);
+        return {
+            affectedRows
+        }
+    }
+
+    static async changeCompanyIndustry(id, industry) {
+        let sql = `UPDATE company
+                   SET Industry = ?
+                   WHERE CompanyID = ?`;
+        const {affectedRows} = await db.query(sql, [industry, id]);
+        return {
+            affectedRows
+        }
+    }
+
+    static async editCompanyWebsite(id, website) {
+        let sql = `UPDATE company
+                   SET Website = ?
+                   WHERE CompanyID = ?`;
+        const {affectedRows} = await db.query(sql, [website, id]);
+        return {
+            affectedRows
+        }
+    }
+
+    static async getCompanybyName(name) {
+        let sql = `SELECT *
+                   FROM company
+                   WHERE Name = '${name}'`;
+        const rows = await db.query(sql);
+        return CompanyModel.fromRow(rows[0]);
+    }
+
+    static async getCompanyDetails(id) {
+        let sql = `SELECT *
+                   FROM company
+                   WHERE CompanyID = ${id}`;
+        const rows = await db.query(sql);
+        return CompanyModel.fromRow(rows[0]);
+    }
 }
+
+module.exports = CompanyRepository;

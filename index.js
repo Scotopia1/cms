@@ -17,8 +17,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
-app.use('/api/cms', companyRoutes);
-app.use('/api/cms', memberRoutes);
+app.use('/api/cms/companies', companyRoutes);
+app.use('/api/cms/members', memberRoutes);
 
 // Start the server
 const PORT = process.env.PORT

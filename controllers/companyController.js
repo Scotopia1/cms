@@ -9,7 +9,7 @@ class CompanyController {
             const companies = await CompanyService.getCompanies();
             res.status(200).json(companies);
         } catch (e) {
-            res.status(500).json({message: 'Error occurred while getting all companies!', error: e.message});
+            res.status(500).json({message: 'Error occurred while getting companies!', error: e.message});
         }
     }
 

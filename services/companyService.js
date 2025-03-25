@@ -15,7 +15,7 @@ class CompanyService {
     static async getCompanies() {
         // Get all companies
         try {
-            return CompanyRepository.getCompanies();
+            return CompanyRepository.readCompanies();
         } catch (e) {
             throw new Error(e);
         }
