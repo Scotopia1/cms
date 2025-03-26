@@ -1,78 +1,96 @@
 const MemberService = require('../services/memberService');
-const Member = require("../models/memberModel");
+const MemberModel = require("../models/memberModel");
 
-class MemberController {
+const MemberController = {
+    async createMember(req, res) {
+        try {
+            const member = new MemberModel(req.body);
+            const newMember = await MemberService.createMember(member);
+            res.status(201).json(newMember);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
 
-    static async getAllMembers(req, res) {
-        // Get all members
+    async getAllMembers(req, res) {
         try {
             const members = await MemberService.getAllMembers();
             res.status(200).json(members);
-        } catch (e) {
-            res.status(500).json({message: 'Error occurred while getting all members!', error: e.message});
+        } catch (error) {
+            res.status(400).json({ message: error.message });
         }
-    }
+    },
 
-    static async getMemberById(req, res) {
-        // Get member by name
+    async getMemberById(req, res) {
         try {
-            const member = await MemberService.getMemberById(req.params.name);
+            const member = await MemberService.getMemberById(req.params.id);
             res.status(200).json(member);
-        } catch (e) {
-            console.log(e);
-            res.status(500).json({message: 'Error occurred while getting member by name', error: e.message});
+        } catch (error) {
+            res.status(400).json({ message: error.message });
         }
-    }
+    },
 
-    static async getMemberDetails(req, res) {
-        // Get member details
+    async getMemberDetails(req, res) {
         try {
             const member = await MemberService.getMemberDetails(req.params.id);
             res.status(200).json(member);
-        } catch (e) {
-            res.status(500).json({message: 'Error occurred while getting Member Details!', error: e.message});
+        } catch (error) {
+            res.status(400).json({ message: error.message });
         }
-    }
+    },
 
-    static async createMember(req, res) {
-        //create a new member
+    async changeMemberName(req, res) {
         try {
-            const {Name, Position, Email, Phone, Availability} = req.body;
-
-            let member = new Member(Name, Position, Email, Phone, Availability);
-            const service = await MemberService.createMember(member);
+            const member = await MemberService.changeMemberName(req.params.id, req.body);
             res.status(200).json(member);
-        } catch (e) {
-            res.status(500).json({message: 'Error occurred while creating the member!', error: e.message});
+        } catch (error) {
+            res.status(400).json({ message: error.message });
         }
-    }
+    },
 
-    static async changeMemberName(req, res) {
-        // Change member name
+    async changeMemberPosition(req, res) {
         try {
-            const id = req.params;
-            const {Name} = req.body;
-            if (!Name) {
-                return res.status(400).json({message: 'Name is required!'});
-            }
-
-            const result = await MemberService.changeMemberName(id, Name);
-            res.status(200).json(result);
-        } catch (e) {
-            res.status(500).json({message: 'Error occurred while changing the member name!', error: e.message});
+            const member = await MemberService.changeMemberPosition(req.params.id, req.body);
+            res.status(200).json(member);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
         }
-    }
+    },
 
-    static async changeMemberPosition(req, res) {
-        // Change member position
+    async changeMemberEmail(req, res) {
         try {
-            const id = req.params;
-            const {Position} = req.body;
-            if (!Position) {
-                return res.status(400).json({message: 'Position is required!'});
-            }
-        } catch (e) {
-            res.status(500).json({message: 'Error occurred while changing the member position!', error: e.message});
+            const member = await MemberService.changeMemberEmail(req.params.id, req.body);
+            res.status(200).json(member);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
+
+    async changeMemberPassword(req, res) {
+        try {
+            const member = await MemberService.changeMemberPassword(req.params.id, req.body);
+            res.status(200).json(member);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
+
+    async EditMemberAvailability(req, res) {
+        try {
+            const member = await MemberService.EditMemberAvailability(req.params.id, req.body);
+            res.status(200).json(member);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
+
+    async deleteMember(req, res) {
+        try {
+            const member = await MemberService.deleteMember(req.params.id);
+            res.status(200).json(member);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
         }
     }
-}
+};
+module.exports = MemberController;

@@ -22,12 +22,11 @@ CREATE TABLE PROJECT (
 CREATE TABLE MEMBER (
     MemberID INT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
+    Position VARCHAR(50),
     Email VARCHAR(255) UNIQUE NOT NULL,
-    Skill TEXT,
-    Role VARCHAR(50),
+    Password VARCHAR(255) NOT NULL,
     Availability BOOLEAN,
     CompanyID INT NOT NULL,
-    Password VARCHAR(255) NOT NULL,
     FOREIGN KEY (CompanyID) REFERENCES COMPANY(CompanyID)
 );
 
