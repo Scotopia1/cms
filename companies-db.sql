@@ -22,11 +22,12 @@ CREATE TABLE PROJECT (
 CREATE TABLE MEMBER (
     MemberID INT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
-    Position VARCHAR(50),
     Email VARCHAR(255) UNIQUE NOT NULL,
-    Password VARCHAR(255) NOT NULL,
+    Skill TEXT,
+    Role VARCHAR(50),
     Availability BOOLEAN,
     CompanyID INT NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     FOREIGN KEY (CompanyID) REFERENCES COMPANY(CompanyID)
 );
 
@@ -80,3 +81,42 @@ CREATE TABLE PARTNERSHIP (
     FOREIGN KEY (ProjectID) REFERENCES PROJECT(ProjectID),
     FOREIGN KEY (ManagerID) REFERENCES MANAGER(ManagerID)
 );
+
+-- Create the TASK_MEMBER table *without* the CHECK constraint
+CREATE TABLE TASK_MEMBER (
+    TaskID INT NOT NULL,
+    MemberID INT NOT NULL,
+    PRIMARY KEY (TaskID, MemberID),
+    FOREIGN KEY (TaskID) REFERENCES TASK(TaskID),
+    FOREIGN KEY (MemberID) REFERENCES MEMBER(MemberID)
+);
+
+-- Trigger to enforce that the Member is from the same Company as the Project
+DELIMITER //  -- Change delimiter to allow multi-statement trigger
+
+CREATE TRIGGER TRG_TASK_MEMBER_Company
+BEFORE INSERT ON TASK_MEMBER
+FOR EACH ROW
+BEGIN
+    DECLARE project_company INT;
+    DECLARE member_company INT;
+
+    -- Get the CompanyID of the project
+    SELECT p.CompanyID INTO project_company
+    FROM TASK t
+    JOIN PROJECT p ON t.ProjectID = p.ProjectID
+    WHERE t.TaskID = NEW.TaskID;
+
+    -- Get the CompanyID of the member
+    SELECT CompanyID INTO member_company
+    FROM MEMBER
+    WHERE MemberID = NEW.MemberID;
+
+    -- Check if the member's company matches the project's company
+    IF project_company != member_company THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Member must be from the same company as the project.';
+    END IF;
+END//
+
+DELIMITER ;  -- Reset delimiter
