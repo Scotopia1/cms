@@ -2,7 +2,8 @@ const {DataTypes, Model} = require("sequelize");
 const sequelize = require('../config/db-sequelize');
 const moment = require("moment");
 
-class CompanyModel extends Model {
+
+class Company extends Model {
     constructor(Name, Location, ContactInfo, Industry, Website) {
         super();
         this.Name = Name;
@@ -13,16 +14,15 @@ class CompanyModel extends Model {
     }
 
     static fromRow(row) {
-        return new CompanyModel(row);
+        return new Company(row);
     }
 }
 
-CompanyModel.init({
+Company.init({
     CompanyID: {
-        type: DataTypes.STRING,
-        length: 11,
-        allowNull: false,
-        primaryKey: true
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
     },
     Name: {
         type: DataTypes.STRING,
@@ -36,6 +36,7 @@ CompanyModel.init({
     },
     ContactInfo: {
         type: DataTypes.STRING,
+        length: 255,
         allowNull: true
     },
     Industry: {
@@ -55,4 +56,4 @@ CompanyModel.init({
     timestamps: false
 });
 
-module.exports = CompanyModel;
+module.exports = Company;

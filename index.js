@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 // security package
 const cors = require('cors');
 const companyRoutes = require('./routes/companyRoutes');
-const memberRoutes = require('./routes/memberRoutes');
-const projectRoutes = require('./routes/projectRoutes');
+// const memberRoutes = require('./routes/memberRoutes');
+// const projectRoutes = require('./routes/projectRoutes');
 
 require('dotenv').config();
 
@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api/cms/companies', companyRoutes);
-app.use('/api/cms/', memberRoutes);
+// app.use('/api/cms/', memberRoutes);
 
 // Start the server
 const PORT = process.env.PORT

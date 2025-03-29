@@ -43,7 +43,7 @@ const validateMember =[
 ];
 
 const validateMemberId = [
-    param('id').isInt().withMessage('ID must be integer'),
+    param('MemberID').isInt().withMessage('ID must be integer'),
     (req, res, next)=>{
         const errors = validationResult(req);
         if(!errors.isEmpty()){

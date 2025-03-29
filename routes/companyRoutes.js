@@ -1,25 +1,24 @@
 const express = require('express');
-const CompanyController = require('../controllers/companyController');
-const {validateCompany, validateCompanyId} = require('../validators/company.dto');
-
-
-const app = express();
 const router = express.Router();
+const CompanyController = require('../controllers/companyController');
+const { validateCompany, validateCompanyId } = require('../validators/company.dto');
 
-const projectRoutes = require('./projectRoutes');
+// Get all companies
+router.get('/', CompanyController.getCompanies);
 
-// Get requests
-router.get('/', CompanyController.getCompanies); // Get all companies
-router.get('/:name', CompanyController.getCompanybyName); // Get company by name
-router.get('/:companyid', CompanyController.getCompanyDetails); // Combine details into one endpoint
+// Get company by name
+router.get('/name/:name', CompanyController.getCompanybyName);
 
-// Post requests
-router.post('/', validateCompany, CompanyController.createCompany); // Create a company
+// Get company details by ID
+router.get('/:CompanyID', validateCompanyId, CompanyController.getCompanyDetails);
 
-// Put requests
-router.put('/:companyid', validateCompany, validateCompanyId,  CompanyController.updateCompany); // Update a company
+// Create a new company
+router.post('/', validateCompany, CompanyController.createCompany);
 
-// Delete requests
-router.delete('/:companyid/', CompanyController.deleteCompany); // Delete a company
+// Update a company
+router.put('/:CompanyID', validateCompany, validateCompanyId, CompanyController.updateCompany);
+
+// Delete a company
+router.delete('/:CompanyID', validateCompanyId, CompanyController.deleteCompany);
 
 module.exports = router;

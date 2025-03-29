@@ -25,12 +25,6 @@ const validateCompany =[
         .notEmpty()
         .withMessage('Industry is required'),
 
-    body('CompanyId')
-        .notEmpty()
-        .withMessage('Company ID is required')
-        .isInt()
-        .withMessage('Company ID must be integer'),
-
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -41,7 +35,12 @@ const validateCompany =[
 ];
 
 const validateCompanyId = [
-    param('id').isInt().withMessage('ID must be integer'),
+    body('CompanyID')
+        .notEmpty()
+        .withMessage('Company ID is required')
+        .isInt()
+        .withMessage('Company ID must be integer'),
+
     (req, res, next)=>{
         const errors = validationResult(req);
         if(!errors.isEmpty()){
