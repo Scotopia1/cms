@@ -1,5 +1,4 @@
 const {body, param, validationResult} = require("express-validator");
-const {validateCompanyId} = require('./company.dto');
 
 const validateMember =[
     body('Name')
@@ -8,29 +7,23 @@ const validateMember =[
         .notEmpty()
         .withMessage('Name is required'),
 
-    body('Position')
-        .isString()
-        .withMessage('Position must be string')
-        .notEmpty()
-        .withMessage('Position is required'),
-
     body('Email')
         .isEmail()
         .withMessage('Email must be email')
         .notEmpty()
         .withMessage('Email is required'),
 
-    body('Phone')
+    body('Password')
         .isString()
-        .withMessage('Phone must be string')
+        .withMessage('Password must be string')
         .notEmpty()
-        .withMessage('Phone is required'),
+        .withMessage('Password is required'),
 
-    body('Availability')
+    body('Position')
         .isString()
-        .withMessage('Availability must be string')
+        .withMessage('Position must be string')
         .notEmpty()
-        .withMessage('Availability is required'),
+        .withMessage('Position is required'),
 
 
     (req, res, next) => {

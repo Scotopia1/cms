@@ -1,6 +1,5 @@
 const {DataTypes, Model} = require("sequelize");
 const sequelize = require('../config/db-sequelize');
-const moment = require("moment");
 
 
 class Company extends Model {

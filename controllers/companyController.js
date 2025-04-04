@@ -1,6 +1,5 @@
 const companyService = require('../services/companyService');
 const Company = require('../models/companyModel');
-const {validateCompany} = require('../validators/company.dto');
 
 const CompanyController = {
     getCompanies: async (req, res) => {

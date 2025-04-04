@@ -1,37 +1,33 @@
 const {DataTypes, Model} = require("sequelize");
 const sequelize = require('../config/db-sequelize');
 const moment = require("moment");
+const Company = require("./companyModel");
 
-class MemberModel extends Model {
-    constructor(Name, Position, Email, CompanyID) {
+class Member extends Model {
+    constructor(Name, Email, Password, Position, CompanyID) {
         super();
         this.Name = Name;
-        this.Position = Position;
         this.Email = Email;
+        this.Password = Password;
+        this.Position = Position;
         this.CompanyID = CompanyID;
     }
 
     static fromRow(row) {
-        return new MemberModel(row);
+        return new Member(row);
     }
 }
 
-MemberModel.init({
+Member.init({
     MemberID: {
-        type: DataTypes.STRING,
-        length: 11,
-        allowNull: false,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true
     },
     Name: {
         type: DataTypes.STRING,
         length: 255,
         allowNull: false
-    },
-    Position: {
-        type: DataTypes.STRING,
-        length: 255,
-        allowNull: true
     },
     Email: {
         type: DataTypes.STRING,
@@ -42,21 +38,24 @@ MemberModel.init({
         length: 255,
         allowNull: true
     },
-    Availability: {
+    Position: {
         type: DataTypes.STRING,
         length: 255,
         allowNull: true
     },
     CompanyID: {
-        type: DataTypes.STRING,
-        length: 11,
-        allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Company,
+            key: 'CompanyID'
+        }
     }
 }, {
     sequelize,
-    modelName: 'Member',
+    modelName: Member,
     tableName: 'member',
     timestamps: false
 });
 
-module.exports = MemberModel;
+module.exports = Member;

@@ -1,17 +1,17 @@
 const db = require('../config/db');
 const Company = require('../models/companyModel');
 
-class  CompanyRepository{
-    static async read(){
+const CompanyRepository = {
+    read: async () => {
         try {
             const rows = await db.query('SELECT * FROM company');
             return rows.map(Company.fromRow);
         } catch (error) {
             throw new Error(`Error fetching companies: ${error.message}`);
         }
-    }
+    },
 
-    static async readCompany(id){
+    readCompany: async (id) => {
         try {
             const sql = `SELECT * FROM company WHERE CompanyID = ${id}`;
             const rows = await db.query(sql);
@@ -19,9 +19,9 @@ class  CompanyRepository{
         } catch (error) {
             throw new Error(`Error fetching company with ID ${id}: ${error.message}`);
         }
-    }
+    },
 
-    static async readCompanyByName(){
+    readCompanyByName: async (name) => {
         try {
             const sql = `SELECT * FROM company WHERE Name = ${name}`;
             const rows = await db.query(sql);
@@ -29,9 +29,9 @@ class  CompanyRepository{
         } catch (error) {
             throw new Error(`Error fetching company with name ${name}: ${error.message}`);
         }
-    }
+    },
 
-    static async create(company) {
+    create: async (company) => {
         try {
             if (await this.companyExists(company.Name)) {
                 return {
@@ -54,9 +54,9 @@ class  CompanyRepository{
         } catch (error) {
             throw new Error(`Error creating company from repo: ${error.message}`);
         }
-    }
+    },
 
-    static async update(company) {
+    update: async (company) => {
         try {
             const sql = `UPDATE company SET 
                             Name = ?, 
@@ -65,14 +65,16 @@ class  CompanyRepository{
                             Industry = ?, 
                             Website = ? 
                             WHERE CompanyID = ?`;
-            const [result] = await db.query(sql, [company.Name, company.Location, company.ContactInfo, company.Industry, company.Website, company.CompanyID]);
-            return result;
+            const {affectedRows} = await db.query(sql, [company.Name, company.Location, company.ContactInfo, company.Industry, company.Website, company.CompanyID]);
+            return {
+                affectedRows
+            };
         }catch (error) {
             throw new Error(`Error updating company: ${error.message}`);
         }
-    }
+    },
 
-    static async delete(CompanyID) {
+    delete: async (CompanyID) => {
         try {
             const sql = `DELETE FROM company WHERE CompanyID = ?`;
             const { affectedRows } = await db.query(sql, [CompanyID]);
@@ -82,9 +84,9 @@ class  CompanyRepository{
         } catch (error) {
             throw new Error(`Error deleting company with ID ${CompanyID}: ${error.message}`);
         }
-    }
+    },
 
-    static async companyExists(name) {
+    companyExists: async (name) => {
         try {
             const sql = `SELECT * FROM company WHERE Name = ?`;
             const rows = await db.query(sql, [name]);

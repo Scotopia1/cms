@@ -1,27 +1,28 @@
 const {DataTypes, Model} = require("sequelize");
 const sequelize = require('../config/db-sequelize');
 const moment = require("moment");
+const Company = require("./companyModel");
 
-class ProjectModel extends Model {
-    constructor(Name, Description, StartDate, EndDate, Status) {
+class Project extends Model {
+    constructor(Name, Description, StartDate, EndDate, Status, CompanyID) {
         super();
         this.Name = Name;
         this.Description = Description;
-        this.StartDate = StartDate;
-        this.EndDate = EndDate;
+        this.StartDate = moment().format('YYYY-MM-DD HH:mm:ss');
+        this.EndDate = EndDate ? moment(EndDate).format('YYYY-MM-DD HH:mm:ss') : null;
         this.Status = Status;
+        this.CompanyID = CompanyID;
     }
 
     static fromRow(row) {
-        return new ProjectModel(row);
+        return new Project(row);
     }
 }
 
-ProjectModel.init({
+Project.init({
     ProjectID: {
-        type: DataTypes.STRING,
-        length: 11,
-        allowNull: false,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true
     },
     Name: {
@@ -41,25 +42,25 @@ ProjectModel.init({
         type: DataTypes.DATE,
         allowNull: true
     },
-    Budget: {
-        type: DataTypes.DECIMAL,
-        allowNull: true
-    },
     Status: {
         type: DataTypes.STRING,
         length: 255,
         allowNull: true
     },
     CompanyID: {
-        type: DataTypes.STRING,
-        length: 11,
-        allowNull: true
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Company,
+            key: 'CompanyID'
+        }
     }
-}, {
+},
+    {
     sequelize,
-    modelName: 'Project',
+    modelName: Project,
     tableName: 'project',
     timestamps: false
 });
 
-module.exports = ProjectModel;
+module.exports = Project;
