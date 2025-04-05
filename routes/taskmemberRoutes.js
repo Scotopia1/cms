@@ -8,18 +8,18 @@ const {validateMemberId} = require ('../validators/member.dto');
 router.get('/', taskMemberController.getAllTaskMembers);
 
 // Get all members assigned to a task
-router.get('/task-members/task/:TaskID', validateTaskId, taskMemberController.getMemberAssignedToTask);
+router.get('/task/:TaskID', validateTaskId, taskMemberController.getMemberAssignedToTask);
 
 // Get all tasks assigned to a member
-router.get('/task-members/member/:MemberID', validateMemberId, taskMemberController.getTaskAssignedToMember);
+router.get('/member/:MemberID', validateMemberId, taskMemberController.getTaskAssignedToMember);
 
 // Get  detailed tasks assigned to a specific member
-router.get('/task-members/member/:MemberID/tasks/:TaskID', validateMemberId, validateTaskId,taskMemberController.getTaskAssignedToMemberDetails);
+router.get('/member/:MemberID/tasks/:TaskID', validateMemberId, validateTaskId,taskMemberController.getTaskAssignedToMemberDetails);
 
 // Assign a member to a task
-router.post('/task-members/task/:TaskID/member/:MemberID', validateTaskId, validateMemberId, taskMemberController.assignMemberToTask);
+router.post('/task/', taskMemberController.assignMemberToTask);
 
 // Unassign a member from a task
-router.delete('/task-members?TaskID=:TaskID&MemberID=:MemberID', validateTaskId, validateMemberId, taskMemberController.unassignMemberFromTask);
+router.delete('/', taskMemberController.unassignMemberFromTask);
 
 module.exports = router;

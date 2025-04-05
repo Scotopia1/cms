@@ -45,7 +45,10 @@ const taskMemberController = {
     },
 
     assignMemberToTask: async (req, res) => {
-        const {TaskID, MemberID} = req.params;
+        const {TaskID, MemberID} = req.body;
+        if (!TaskID || !MemberID) {
+            return res.status(400).json({error: 'TaskID and MemberID are required'});
+        }
         try {
             const result = await TaskMemberService.assignMemberToTask(TaskID, MemberID);
             if (result) {
@@ -60,7 +63,10 @@ const taskMemberController = {
     },
 
     unassignMemberFromTask: async (req, res) => {
-        const {TaskID, MemberID} = req.query;
+        const {TaskID, MemberID} = req.body;
+        if (!TaskID || !MemberID) {
+            return res.status(400).json({error: 'TaskID and MemberID are required'});
+        }
         try {
             const result = await TaskMemberService.unassignMemberFromTask(TaskID, MemberID);
             if (result) {
