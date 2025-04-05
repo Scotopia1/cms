@@ -18,3 +18,5 @@ router.put('/:ManagerID', validateManager, validateManagerId, ManagerController.
 
 // Delete a manager
 router.delete('/:ManagerID', validateManagerId, ManagerController.deleteManager);
+
+module.exports = router;
