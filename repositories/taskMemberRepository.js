@@ -1,8 +1,9 @@
 const db = require('../config/db');
 const Task = require('../models/taskModel');
 const Member = require('../models/memberModel');
-const TaskRepository = require('../repositories/taskRepository');
-const MemberRepository = require('../repositories/memberRepository');
+const TaskRepository = require('./taskRepository');
+const MemberRepository = require('./memberRepository');
+const WorksForRepository = require('./worksforRepository');
 
 const TaskMemberRepository = {
     getAllTaskMembers: async () => {
@@ -60,6 +61,15 @@ const TaskMemberRepository = {
 
     assignMemberToTask: async (TaskID, MemberID) => {
         try {
+            const projectID = await this.getProjectIDbyTask(TaskID);
+
+            // Check if the member is already assigned to the project
+            if (!await WorksForRepository.AlreadyWorksFor(projectID, MemberID)) {
+                return {
+                    message: 'Member is not assigned to the project'
+                }
+            }
+
             // Check if the task and member exist
             if (!await TaskRepository.isTask(TaskID)) {
                 return {
@@ -141,6 +151,19 @@ const TaskMemberRepository = {
             return rows.length > 0;
         } catch (error) {
             console.error('Error checking if member is already assigned to task:', error);
+            throw error;
+        }
+    },
+
+    getProjectIDbyTask: async (TaskID) => {
+        try {
+            let sql = `SELECT ProjectID
+                       FROM task
+                       WHERE TaskID = ?`;
+            const [rows] = await db.query(sql, [TaskID]);
+            return rows[0].ProjectID;
+        } catch (error) {
+            console.error('Error fetching project ID by task:', error);
             throw error;
         }
     }

@@ -10,7 +10,7 @@ const taskRoutes = require('./routes/taskRoutes');
 const managerRoutes = require('./routes/managerRoutes');
 const taskMemberRoutes = require('./routes/taskMemberRoutes');
 const handledByRoutes = require('./routes/handledbyRoutes');
-const worksforRoutes = require('./routes/worksforRoutes');
+const worksForRoutes = require('./routes/worksforRoutes');
 
 require('dotenv').config();
 
@@ -31,7 +31,7 @@ app.use('/api/cms/company/project/tasks', taskRoutes);
 app.use('/api/cms/company/managers', managerRoutes);
 app.use('/api/cms/company/task-member', taskMemberRoutes);
 app.use('/api/cms/company/handled-by', handledByRoutes);
-app.use('/api/cms/company/works-for', worksforRoutes);
+app.use('/api/cms/company/works-for', worksForRoutes);
 
 // Start the server
 const PORT = process.env.PORT
