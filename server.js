@@ -8,6 +8,7 @@ const memberRoutes = require('./routes/memberRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const managerRoutes = require('./routes/managerRoutes');
+const taskMemberRoutes = require('./routes/taskMemberRoutes');
 
 require('dotenv').config();
 
@@ -26,7 +27,7 @@ app.use('/api/cms/company/members', memberRoutes);
 app.use('/api/cms/company/projects', projectRoutes);
 app.use('/api/cms/company/project/tasks', taskRoutes);
 app.use('/api/cms/company/managers', managerRoutes);
-
+app.use('/api/cms/company/', taskMemberRoutes);
 // Start the server
 const PORT = process.env.PORT
 app.listen(PORT, () => {

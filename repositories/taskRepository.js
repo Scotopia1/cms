@@ -96,6 +96,18 @@ const TaskRepository = {
         }catch (error){
             throw new Error('Error deleting task');
         }
+    },
+
+    isTask: async (taskId) => {
+        try {
+            let sql = `SELECT *
+                       FROM task
+                       WHERE TaskID = ?`;
+            const rows = await db.query(sql, [taskId]);
+            return rows.length > 0;
+        } catch (error) {
+            throw new Error('Error checking if task exists');
+        }
     }
 }
 
