@@ -13,23 +13,11 @@ const validateProject =[
         .notEmpty()
         .withMessage('Description is required'),
 
-    body('StartDate')
-        .isDate()
-        .withMessage('StartDate must be date')
+    body('Status')
+        .isIn(['Pending', 'In Progress', 'Completed'])
+        .withMessage('Status must be either pending or In progress or completed')
         .notEmpty()
-        .withMessage('StartDate is required'),
-
-    body('EndDate')
-        .isDate()
-        .withMessage('EndDate must be date')
-        .notEmpty()
-        .withMessage('EndDate is required'),
-
-    body('CompanyId')
-        .notEmpty()
-        .withMessage('Company ID is required')
-        .isInt()
-        .withMessage('Company ID must be integer'),
+        .withMessage('Status is required'),
 
     (req, res, next) => {
         const errors = validationResult(req);

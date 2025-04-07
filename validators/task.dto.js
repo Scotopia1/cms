@@ -13,9 +13,15 @@ const validateTask = [
         .notEmpty()
         .withMessage('Description is required'),
 
+    body('Status')
+        .isIn(['Pending', 'In Progress', 'Completed'])
+        .withMessage('Status must be either Pending, In Progress or Completed')
+        .notEmpty()
+        .withMessage('Status is required'),
+
     body('Priority')
-        .isString()
-        .withMessage('Priority must be string')
+        .isIn(['1', '2', '3'])
+        .withMessage('Priority must be either 1, 2 or 3')
         .notEmpty()
         .withMessage('Priority is required'),
 

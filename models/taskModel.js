@@ -43,11 +43,9 @@ Task.init({
         allowNull: false
     },
     Status: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('Pending', 'In Progress', 'Completed'),
         allowNull: false,
-        validate: {
-            isIn: [['Pending', 'In Progress', 'Completed']]
-        }
+        defaultValue: 'Pending'
     },
     ProjectID: {
         type: DataTypes.INTEGER,
@@ -57,8 +55,9 @@ Task.init({
         }
     },
     Priority: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.ENUM('1', '2', '3'),
+        allowNull: false,
+        defaultValue: '2'
     },
     Deadline: {
         type: DataTypes.DATE,
@@ -66,7 +65,7 @@ Task.init({
     }
 }, {
     sequelize,
-    modelName: Task,
+    modelName: 'Task',
     tableName: 'tasks',
 });
 

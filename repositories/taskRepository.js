@@ -3,6 +3,12 @@ const Task = require('../models/taskModel');
 const ProjectRepository = require('./projectRepository');
 
 const TaskRepository = {
+
+    /**
+     * Fetches all tasks from the database.
+     * @param projectId
+     * @returns {Promise<*>}
+     */
     getTasksByProjectId: async (projectId) => {
         try{
             let sql = `SELECT * FROM task WHERE ProjectID = ?`;
@@ -14,6 +20,12 @@ const TaskRepository = {
         }
     },
 
+    /**
+     * Fetches a task by its title from the database.
+     * @param projectId
+     * @param taskTitle
+     * @returns {Promise<*>}
+     */
     getTaskByTitle: async (projectId, taskTitle) => {
         try{
             let sql = `SELECT * FROM task WHERE ProjectID = ? AND Title = ?`;
@@ -25,6 +37,12 @@ const TaskRepository = {
         }
     },
 
+    /**
+     * Fetches a task by its ID from the database.
+     * @param projectId
+     * @param taskId
+     * @returns {Promise<*>}
+     */
     getTaskById: async (projectId, taskId) => {
         try{
             let sql = `SELECT * FROM task WHERE ProjectID = ? AND TaskID = ?`;
@@ -36,6 +54,12 @@ const TaskRepository = {
         }
     },
 
+    /**
+     * Creates a new task in the database.
+     * @param projectId
+     * @param task
+     * @returns {Promise<{affectedRows: *, message: string}|{message: string}>}
+     */
     createTask: async (projectId, task) => {
         try{
             if (!(await ProjectRepository.projectExists(projectId))) {
@@ -60,6 +84,13 @@ const TaskRepository = {
         }
     },
 
+    /**
+     * Updates an existing task in the database.
+     * @param projectId
+     * @param taskId
+     * @param updatedData
+     * @returns {Promise<{affectedRows: *, message: string}|{message: string}>}
+     */
     updateTask: async (projectId, taskId, updatedData) => {
         try{
             if (!(await ProjectRepository.projectExists(projectId))) {
@@ -85,6 +116,12 @@ const TaskRepository = {
         }
     },
 
+    /**
+     * Deletes a task from the database.
+     * @param projectId
+     * @param taskId
+     * @returns {Promise<{affectedRows: *, message: string}>}
+     */
     deleteTask: async (projectId, taskId) => {
         try{
             let sql = `DELETE FROM task WHERE ProjectID = ? AND TaskID = ?`;
@@ -98,6 +135,11 @@ const TaskRepository = {
         }
     },
 
+    /**
+     * Checks if a task exists in the database.
+     * @param taskId
+     * @returns {Promise<boolean>}
+     */
     isTask: async (taskId) => {
         try {
             let sql = `SELECT *

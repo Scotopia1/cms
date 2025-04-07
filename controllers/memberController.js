@@ -1,7 +1,15 @@
 const Member = require('../models/memberModel');
 const MemberService = require('../services/memberService');
+const Util = require('../Utils/utils');
 
 const MemberController = {
+
+    /**
+     * Get all members for a specific company
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     getAllMembersByCompanyId: async (req, res) => {
         try {
             const companyId = req.params.CompanyID;
@@ -15,6 +23,12 @@ const MemberController = {
         }
     },
 
+    /**
+     * Get a specific member by ID
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     getMemberbyName: async (req, res) => {
         try {
             const memberName = req.params.name;
@@ -28,6 +42,12 @@ const MemberController = {
         }
     },
 
+    /**
+     * Get a specific member by ID
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     getMemberDetails: async (req, res) => {
         try {
             const memberId = req.params.MemberID;
@@ -41,6 +61,12 @@ const MemberController = {
         }
     },
 
+    /**
+     * Create a new member for a specific company
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     createMember: async (req, res) => {
         try {
             const CompanyID = req.params.CompanyID;
@@ -48,7 +74,8 @@ const MemberController = {
             if (!Name || !Email || !Password || !Position) {
                 return res.status(400).json({ message: 'All fields are required' });
             }
-            let member = new Member(Name, Email, Password, Position, CompanyID);
+            let encryptedPassword = await Util.hashedPassword(Password);
+            let member = new Member(Name, Email, encryptedPassword, Position, CompanyID);
             const newMember = await MemberService.createMember(member);
             res.status(201).json(newMember);
         } catch (error) {
@@ -56,6 +83,12 @@ const MemberController = {
         }
     },
 
+    /**
+     * Update a member's details
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     updateMember: async (req, res) => {
         try {
             const memberId = req.params.MemberID;
@@ -70,6 +103,12 @@ const MemberController = {
         }
     },
 
+    /**
+     * Delete a member
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     deleteMember: async (req, res) => {
         try {
             const memberId = req.params.MemberID;

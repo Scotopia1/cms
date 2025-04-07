@@ -6,6 +6,11 @@ const MemberRepository = require('./memberRepository');
 const WorksForRepository = require('./worksforRepository');
 
 const TaskMemberRepository = {
+
+    /**
+     * Get all task members
+     * @returns {Promise<*>}
+     */
     getAllTaskMembers: async () => {
         try {
             let sql = `SELECT *
@@ -18,6 +23,11 @@ const TaskMemberRepository = {
         }
     },
 
+    /**
+     * Get all members assigned to a task
+     * @param TaskID
+     * @returns {Promise<*>}
+     */
     getMemberAssignedToTask: async (TaskID) => {
         try {
             let sql = `SELECT *
@@ -31,6 +41,11 @@ const TaskMemberRepository = {
         }
     },
 
+    /**
+     * Get all tasks assigned to a member
+     * @param MemberID
+     * @returns {Promise<*>}
+     */
     getTaskAssignedToMember: async (MemberID) => {
         try {
             let sql = `SELECT *
@@ -44,6 +59,12 @@ const TaskMemberRepository = {
         }
     },
 
+    /**
+     * Get task details assigned to a member
+     * @param MemberID
+     * @param TaskID
+     * @returns {Promise<Task>}
+     */
     getTaskAssignedToMemberDetails: async (MemberID, TaskID) => {
         try {
             let sql = `SELECT *
@@ -59,6 +80,12 @@ const TaskMemberRepository = {
         }
     },
 
+    /**
+     * Assign a member to a task
+     * @param TaskID
+     * @param MemberID
+     * @returns {Promise<{message: string}|{AffectedRows: any, message: string}>}
+     */
     assignMemberToTask: async (TaskID, MemberID) => {
         try {
             const projectID = await this.getProjectIDbyTask(TaskID);
@@ -104,6 +131,12 @@ const TaskMemberRepository = {
         }
     },
 
+    /**
+     * Unassign a member from a task
+     * @param TaskID
+     * @param MemberID
+     * @returns {Promise<{message: string}|{AffectedRows: any, message: string}>}
+     */
     unassignMemberFromTask: async (TaskID, MemberID) => {
         try {
             // Check if the task and member exist
@@ -141,6 +174,13 @@ const TaskMemberRepository = {
         }
     },
 
+    /**
+     * Check if the member is already assigned to the task
+     * @param TaskID
+     * @param MemberID
+     * @returns {Promise<boolean>}
+     * @constructor
+     */
     IsAlreadyAssigned: async (TaskID, MemberID) => {
         try {
             let sql = `SELECT *
@@ -155,6 +195,11 @@ const TaskMemberRepository = {
         }
     },
 
+    /**
+     * Get ProjectID by TaskID
+     * @param TaskID
+     * @returns {Promise<{autoIncrement: boolean, type: IntegerDataTypeConstructor, primaryKey: boolean}|{references: {model: Project|{}, key: string}, type: IntegerDataTypeConstructor}|*>}
+     */
     getProjectIDbyTask: async (TaskID) => {
         try {
             let sql = `SELECT ProjectID

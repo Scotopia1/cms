@@ -36,7 +36,7 @@ Manager.init({
     }
 }, {
     sequelize,
-    modelName: Manager,
+    modelName: 'Manager',
     tableName: 'manager',
     timestamps: false
 });

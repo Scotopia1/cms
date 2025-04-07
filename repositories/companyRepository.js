@@ -2,6 +2,10 @@ const db = require('../config/db');
 const Company = require('../models/companyModel');
 
 const CompanyRepository = {
+    /**
+     * Fetches all companies from the database.
+     * @returns {Promise<*>}
+     */
     read: async () => {
         try {
             const rows = await db.query('SELECT * FROM company');
@@ -11,6 +15,11 @@ const CompanyRepository = {
         }
     },
 
+    /**
+     * Fetches a company by its ID.
+     * @param id
+     * @returns {Promise<Company>}
+     */
     readCompany: async (id) => {
         try {
             const sql = `SELECT * FROM company WHERE CompanyID = ${id}`;
@@ -21,6 +30,11 @@ const CompanyRepository = {
         }
     },
 
+    /**
+     * Fetches a company by its name.
+     * @param name
+     * @returns {Promise<Company>}
+     */
     readCompanyByName: async (name) => {
         try {
             const sql = `SELECT * FROM company WHERE Name = ${name}`;
@@ -31,6 +45,11 @@ const CompanyRepository = {
         }
     },
 
+    /**
+     * Creates a new company in the database.
+     * @param company
+     * @returns {Promise<{affectedRows: *}|{message: string}>}
+     */
     create: async (company) => {
         try {
             if (await this.companyExists(company.Name)) {
@@ -56,6 +75,11 @@ const CompanyRepository = {
         }
     },
 
+    /**
+     * Updates an existing company in the database.
+     * @param company
+     * @returns {Promise<{affectedRows: *}>}
+     */
     update: async (company) => {
         try {
             const sql = `UPDATE company SET 
@@ -74,6 +98,11 @@ const CompanyRepository = {
         }
     },
 
+    /**
+     * Deletes a company from the database.
+     * @param CompanyID
+     * @returns {Promise<{affectedRows: *}>}
+     */
     delete: async (CompanyID) => {
         try {
             const sql = `DELETE FROM company WHERE CompanyID = ?`;
@@ -86,6 +115,11 @@ const CompanyRepository = {
         }
     },
 
+    /**
+     * Checks if a company exists in the database by its name.
+     * @param name
+     * @returns {Promise<boolean>}
+     */
     companyExists: async (name) => {
         try {
             const sql = `SELECT * FROM company WHERE Name = ?`;

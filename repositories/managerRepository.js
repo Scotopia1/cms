@@ -4,6 +4,12 @@ const CompanyRepository = require("./companyRepository");
 const MemberRepository = require("./memberRepository");
 
 const ManagerRepository = {
+
+    /**
+     * Get all managers by company ID
+     * @param CompanyID
+     * @returns {Promise<*>}
+     */
     getAllManagers: async (CompanyID) => {
         try{
             let sql = `SELECT * FROM manager WHERE MemberID IN (SELECT MemberID FROM member WHERE CompanyID = ?)`;
@@ -14,6 +20,11 @@ const ManagerRepository = {
         }
     },
 
+    /**
+     * Get all managers by member ID
+     * @param ManagerID
+     * @returns {Promise<Manager>}
+     */
     getManagerById: async (ManagerID) => {
         try{
             let sql = `SELECT * FROM manager WHERE ManagerID = ?`;
@@ -24,6 +35,13 @@ const ManagerRepository = {
         }
     },
 
+    /**
+     * Get all managers by member ID
+     * @param AdditionalResponsibility
+     * @param MemberID
+     * @param CompanyID
+     * @returns {Promise<{error: string}|{affectedRows: any, message: string}>}
+     */
     createManager: async (AdditionalResponsibility, MemberID, CompanyID) => {
         try{
             if(await CompanyRepository.companyExists(CompanyID)){
@@ -53,6 +71,12 @@ const ManagerRepository = {
         }
     },
 
+    /**
+     * Update manager by ID
+     * @param ManagerID
+     * @param AdditionalResponsibility
+     * @returns {Promise<{error: string}|{affectedRows: any, message: string}>}
+     */
     updateManager: async (ManagerID, AdditionalResponsibility) => {
         try{
             if(!await ManagerRepository.managerExists(ManagerID)){
@@ -72,6 +96,11 @@ const ManagerRepository = {
         }
     },
 
+    /**
+     * Delete manager by ID
+     * @param ManagerID
+     * @returns {Promise<{error: string}|{affectedRows: any, message: string}>}
+     */
     deleteManager: async (ManagerID) => {
         try{
             if(!await ManagerRepository.managerExists(ManagerID)){
@@ -91,6 +120,11 @@ const ManagerRepository = {
         }
     },
 
+    /**
+     * Check if a manager exists by ID
+     * @param ManagerID
+     * @returns {Promise<boolean>}
+     */
     managerExists: async (ManagerID) => {
         try{
             let sql = `SELECT * FROM manager WHERE ManagerID = ?`;
@@ -101,6 +135,11 @@ const ManagerRepository = {
         }
     },
 
+    /**
+     * Check if a member is already a manager
+     * @param MemberID
+     * @returns {Promise<boolean>}
+     */
     memberAlreadyManager: async (MemberID) => {
         try{
             let sql = `SELECT * FROM manager WHERE MemberID = ?`;

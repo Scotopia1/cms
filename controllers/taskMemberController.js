@@ -1,6 +1,13 @@
 const TaskMemberService = require('../services/taskMemberService');
 
 const taskMemberController = {
+
+    /**
+     * Get all task members
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getAllTaskMembers: async (req, res) => {
         try {
             const taskMembers = await TaskMemberService.getAllTaskMembers();
@@ -11,6 +18,12 @@ const taskMemberController = {
         }
     },
 
+    /**
+     * Get all members assigned to a specific task
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getMemberAssignedToTask: async (req, res) => {
         const {TaskID} = req.params;
         try {
@@ -22,6 +35,12 @@ const taskMemberController = {
         }
     },
 
+    /**
+     * Get all tasks assigned to a specific member
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getTaskAssignedToMember: async (req, res) => {
         const {MemberID} = req.params;
         try {
@@ -33,6 +52,12 @@ const taskMemberController = {
         }
     },
 
+    /**
+     * Get details of a specific task assigned to a specific member
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getTaskAssignedToMemberDetails: async (req, res) => {
         const {MemberID, TaskID} = req.params;
         try {
@@ -44,6 +69,12 @@ const taskMemberController = {
         }
     },
 
+    /**
+     * Assign a member to a task
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     assignMemberToTask: async (req, res) => {
         const {TaskID, MemberID} = req.body;
         if (!TaskID || !MemberID) {
@@ -62,6 +93,12 @@ const taskMemberController = {
         }
     },
 
+    /**
+     * Unassign a member from a task
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     unassignMemberFromTask: async (req, res) => {
         const {TaskID, MemberID} = req.body;
         if (!TaskID || !MemberID) {

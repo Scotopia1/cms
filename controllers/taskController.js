@@ -2,6 +2,13 @@ const Task  = require('../models/taskModel');
 const TaskService = require('../services/taskService');
 
 const TaskController = {
+
+    /**
+     * Get all tasks by project ID
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     async getTasksByProjectId(req, res) {
         try {
             const projectId = req.params.ProjectID;
@@ -12,6 +19,12 @@ const TaskController = {
         }
     },
 
+    /**
+     * Get task by title
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
    async getTaskByTitle(req, res) {
         try {
             const projectId = req.params.ProjectID;
@@ -23,6 +36,12 @@ const TaskController = {
         }
     },
 
+    /**
+     * Get task by ID
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     async getTaskById(req, res) {
         try {
             const projectId = req.params.ProjectID;
@@ -34,6 +53,12 @@ const TaskController = {
         }
     },
 
+    /**
+     * Create a new task
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     async createTask(req, res) {
         try {
             const projectId = req.params.ProjectID;
@@ -41,7 +66,8 @@ const TaskController = {
             if (!Title || !Description || !Priority || !Deadline) {
                 return res.status(400).json({ message: 'All fields are required' });
             }
-            let task = new Task(Title, Description, Priority, Deadline, projectId);
+            const deadline = new Date(Deadline);
+            let task = new Task(Title, Description, Priority, deadline, projectId);
             const newTask = await TaskService.createTask(projectId, task);
             res.status(201).json(newTask);
         } catch (error) {
@@ -49,6 +75,12 @@ const TaskController = {
         }
     },
 
+    /**
+     * Update task by ID
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     async updateTask(req, res) {
         try {
             const projectId = req.params.ProjectID;
@@ -74,6 +106,12 @@ const TaskController = {
         }
     },
 
+    /**
+     * Delete task by ID
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     async deleteTask(req, res) {
         try {
             const taskId = req.params.TaskID;

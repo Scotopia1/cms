@@ -5,6 +5,11 @@ const Project = require('../models/projectModel');
 const Manager = require('../models/managerModel');
 
 const HandledbyRepository = {
+
+    /**
+     * Fetch all handled by data
+     * @returns {Promise<*>}
+     */
     getAllHandledBy: async () => {
         try {
             const sql = 'SELECT * FROM handled_by';
@@ -15,6 +20,11 @@ const HandledbyRepository = {
         }
     },
 
+    /**
+     * Fetch all projects handled by a specific manager
+     * @param managerId
+     * @returns {Promise<*|{message: string}>}
+     */
     getProjectsByManager: async (managerId) => {
         try {
 
@@ -31,6 +41,11 @@ const HandledbyRepository = {
         }
     },
 
+    /**
+     * Fetch all managers handling a specific project
+     * @param projectId
+     * @returns {Promise<Manager|{message: string}>}
+     */
     getMangerByProject: async (projectId) => {
         try {
 
@@ -47,6 +62,12 @@ const HandledbyRepository = {
         }
     },
 
+    /**
+     * Assign a manager to a project
+     * @param managerId
+     * @param projectId
+     * @returns {Promise<{message: string}|{affectedRows: any, message: string}>}
+     */
     assignManagerToProject: async (managerId, projectId) => {
         try {
 
@@ -76,6 +97,12 @@ const HandledbyRepository = {
         }
     },
 
+    /**
+     * Update the manager handling a project
+     * @param managerId
+     * @param projectId
+     * @returns {Promise<{message: string}|{affectedRows: any, message: string}>}
+     */
     updateHandledBy: async (managerId, projectId) => {
         try {
             // Check if the manager exists
@@ -104,6 +131,12 @@ const HandledbyRepository = {
         }
     },
 
+    /**
+     * Unassign a manager from a project
+     * @param managerId
+     * @param projectId
+     * @returns {Promise<{message: string}|{affectedRows: any, message: string}>}
+     */
     unassignManagerFromProject: async (managerId, projectId) => {
         try {
             // Check if the manager exists
@@ -132,6 +165,13 @@ const HandledbyRepository = {
         }
     },
 
+    /**
+     * Check if a manager is already handling a project
+     * @param managerId
+     * @param projectId
+     * @returns {Promise<boolean>}
+     * @constructor
+     */
     AlreadyHandledBy: async (managerId, projectId) => {
         try {
             const sql = 'SELECT * FROM handled_by WHERE ManagerID = ? AND ProjectID = ?';

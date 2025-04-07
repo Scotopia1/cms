@@ -1,6 +1,13 @@
 const WorksforService = require('../services/worksforService');
 
 const worksForController = {
+
+    /**
+     * Get all works for
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getAllWorksFor: async (req, res) => {
         try {
             const worksFor = await WorksforService.getAllWorksFor();
@@ -10,6 +17,12 @@ const worksForController = {
         }
     },
 
+    /**
+     * Get all projects for a specific member
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getProjectsByMember: async (req, res) => {
         try {
             const memberId = req.params.MemberID;
@@ -20,6 +33,12 @@ const worksForController = {
         }
     },
 
+    /**
+     * Get all members for a specific project
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getMembersByProject: async (req, res) => {
         try {
             const projectId = req.params.ProjectID;
@@ -30,6 +49,12 @@ const worksForController = {
         }
     },
 
+    /**
+     * Get a specific member by project
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getMemberByProject: async (req, res) => {
         try {
             const projectId = req.params.ProjectID;
@@ -41,6 +66,12 @@ const worksForController = {
         }
     },
 
+    /**
+     * Assign a member to a project
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     assignMemberToProject: async (req, res) => {
         try {
             const { MemberID, ProjectID } = req.body;
@@ -54,6 +85,12 @@ const worksForController = {
         }
     },
 
+    /**
+     * Unassign a member from a project
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     unassignMemberFromProject: async (req, res) => {
         try {
             const { MemberID, ProjectID } = req.body;

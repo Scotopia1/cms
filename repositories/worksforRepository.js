@@ -5,6 +5,11 @@ const ProjectRepository = require('./projectRepository');
 const MemberRepository = require('./memberRepository');
 
 const WorksforRepository = {
+
+    /**
+     * Get all works for data
+     * @returns {Promise<*>}
+     */
     getAllWorksFor: async () => {
         try {
             const sql = 'SELECT * FROM works_for';
@@ -15,6 +20,11 @@ const WorksforRepository = {
         }
     },
 
+    /**
+     * Get all projects assigned to a member
+     * @param memberId
+     * @returns {Promise<*|{message: string}>}
+     */
     getProjectsByMember: async (memberId) => {
         try {
             // Check if the member exists
@@ -30,6 +40,11 @@ const WorksforRepository = {
         }
     },
 
+    /**
+     * Get all members assigned to a project
+     * @param projectId
+     * @returns {Promise<*|{message: string}>}
+     */
     getMembersByProject: async (projectId) => {
         try {
             // Check if the project exists
@@ -45,6 +60,12 @@ const WorksforRepository = {
         }
     },
 
+    /**
+     * Get a member by project
+     * @param projectId
+     * @param memberId
+     * @returns {Promise<*|{message: string}>}
+     */
     getMemberByProject: async (projectId, memberId) => {
         try {
             // Check if the project exists
@@ -70,6 +91,12 @@ const WorksforRepository = {
         }
     },
 
+    /**
+     * Assign a member to a project
+     * @param memberId
+     * @param projectId
+     * @returns {Promise<{message: string}>}
+     */
     assignMemberToProject: async (memberId, projectId) => {
         try {
             // Check if the member exists
@@ -95,6 +122,12 @@ const WorksforRepository = {
         }
     },
 
+    /**
+     * Unassign a member from a project
+     * @param memberId
+     * @param projectId
+     * @returns {Promise<{message: string}>}
+     */
     unassignMemberFromProject: async (memberId, projectId) => {
         try {
             // Check if the member exists
@@ -120,6 +153,13 @@ const WorksforRepository = {
         }
     },
 
+    /**
+     * Check if a member already works for a project
+     * @param memberId
+     * @param projectId
+     * @returns {Promise<boolean>}
+     * @constructor
+     */
     AlreadyWorksFor: async (memberId, projectId) => {
         try {
             const sql = 'SELECT * FROM works_for WHERE MemberID = ? AND ProjectID = ?';

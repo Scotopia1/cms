@@ -2,6 +2,13 @@ const companyService = require('../services/companyService');
 const Company = require('../models/companyModel');
 
 const CompanyController = {
+
+    /**
+     * Get all companies
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getCompanies: async (req, res) => {
         try {
             const companies = await companyService.getAllCompanies();
@@ -11,6 +18,12 @@ const CompanyController = {
         }
     },
 
+    /**
+     * Get company by name
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     getCompanybyName: async (req, res) => {
         try {
             const company = await companyService.getCompanyByName(req.params.name);
@@ -23,6 +36,12 @@ const CompanyController = {
         }
     },
 
+    /**
+     * Get company by ID
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     getCompanyDetails: async (req, res) => {
         try {
             const company = await companyService.getCompanyById(req.params.CompanyID);
@@ -35,6 +54,12 @@ const CompanyController = {
         }
     },
 
+    /**
+     * Create a new company
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     createCompany: async (req, res) => {
         try {
             const { Name, Location, ContactInfo, Industry, Website } = req.body;
@@ -49,6 +74,12 @@ const CompanyController = {
         }
     },
 
+    /**
+     * Update company details
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     updateCompany: async (req, res) => {
         try {
             const companyid = req.params.CompanyID;
@@ -63,6 +94,12 @@ const CompanyController = {
         }
     },
 
+    /**
+     * Delete company
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     deleteCompany: async (req, res) => {
         try {
             const deletedCompany = await companyService.deleteCompany(req.params.CompanyID);

@@ -2,6 +2,13 @@ const ManagerService = require('../services/managerService');
 const {Manager} = require('../models/managerModel');
 
 class ManagerController {
+
+    /**
+     * Get all managers for a specific company
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     static async getManagers(req, res) {
         try {
             const { CompanyID } = req.params;
@@ -12,6 +19,12 @@ class ManagerController {
         }
     }
 
+    /**
+     * Get a specific manager by ID
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     static async getManagerById(req, res) {
         try {
             const { ManagerID } = req.params;
@@ -25,6 +38,12 @@ class ManagerController {
         }
     }
 
+    /**
+     * Create a new manager for a specific company
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     static async createManager(req, res) {
         try {
             const { CompanyID } = req.params;
@@ -36,6 +55,12 @@ class ManagerController {
         }
     }
 
+    /**
+     * Update a manager's additional responsibility
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     static async updateManager(req, res) {
         try {
             const { ManagerID } = req.params;
@@ -50,6 +75,12 @@ class ManagerController {
         }
     }
 
+    /**
+     * Delete a manager
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     static async deleteManager(req, res) {
         try {
             const { ManagerID } = req.params;

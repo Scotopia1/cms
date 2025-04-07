@@ -1,0 +1,1043 @@
+{
+	"info": {
+		"_postman_id": "5c591739-95c8-4dae-b5af-d4e595a9e168",
+		"name": "CMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32290251"
+	},
+	"item": [
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "Create Company",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Universal Scrip corp.\",\r\n    \"Location\": \"Beirut, LB\",\r\n    \"ContactInfo\": \"info@universalscript.com\",\r\n    \"Industry\": \"Software\",\r\n    \"Website\": \"https://www.universalscript.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/companies",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"companies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Companies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/companies/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"companies",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Company by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/companies/name/:name",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"companies",
+								"name",
+								":name"
+							],
+							"variable": [
+								{
+									"key": "name",
+									"value": "Tech Corp"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Company Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/companies/{{CompanyID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"companies",
+								"{{CompanyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Company",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Location\": \"Updated Address\",\r\n    \"Industry\": \"Technology\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/companies/{{CompanyID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"companies",
+								"{{CompanyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Company",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/companies/{{CompanyID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"companies",
+								"{{CompanyID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Member",
+			"item": [
+				{
+					"name": "Create Member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"Name\": \"John Doe\", \"Email\": \"Developer\", \"Password\": \"john@techcorp\", \"Position\": \"Junior Developer\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/companies/{{CompanyID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"companies",
+								"{{CompanyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Members by Company",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/members/{{CompanyID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"{{CompanyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Member by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/members/{{CompanyID}}/:name",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"{{CompanyID}}",
+								":name"
+							],
+							"variable": [
+								{
+									"key": "name",
+									"value": "John Doe"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Member Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/members/{{MemberID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"{{MemberID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Member",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Role\": \"Senior Developer\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/members/{{MemberID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"{{MemberID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Member",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/members/{{MemberID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"{{MemberID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "Create Project",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n    \"Name\": \"E-commerce Platform\",\r\n    \"Description\": \"250000\", \r\n    \"Status\": \"In Progress\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/companies/projects/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"companies",
+								"projects",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Projects by Company",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/projects/{{CompanyID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"projects",
+								"{{CompanyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/projects/{{CompanyID}}/:name",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"projects",
+								"{{CompanyID}}",
+								":name"
+							],
+							"variable": [
+								{
+									"key": "name",
+									"value": "E-commerce Platform"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/projects/{{ProjectID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"projects",
+								"{{ProjectID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Project",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"Description\": \"All fields are required\", \"Status\": \"In Progress\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/projects/{{ProjectID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"projects",
+								"{{ProjectID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Project",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/projects/{{ProjectID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"projects",
+								"{{ProjectID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Create Task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"Title\": \"Implement Authentication\",\r\n    \"Description\": \"Add JWT-based user authentication\",\r\n    \"Priority\": \"1\",\r\n    \"Deadline\": \"2024-12-31T23:59:59Z\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/tasks/{{ProjectID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks",
+								"{{ProjectID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tasks in Project",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tasks/{{ProjectID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks",
+								"{{ProjectID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task by Title",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tasks/{{ProjectID}}/:Title",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks",
+								"{{ProjectID}}",
+								":Title"
+							],
+							"variable": [
+								{
+									"key": "Title",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tasks/{{ProjectID}}/{{TaskID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks",
+								"{{ProjectID}}",
+								"{{TaskID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Status\": \"Completed\", \"Priority\": \"3\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/tasks/{{ProjectID}}/{{TaskID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks",
+								"{{ProjectID}}",
+								"{{TaskID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tasks/{{TaskID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks",
+								"{{TaskID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Managers",
+			"item": [
+				{
+					"name": "Create Manager",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"MemberID\":{{MemberID}},\r\n    \"AdditionalResponsibility\":\"Project Manager\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/managers/{{CompanyID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managers",
+								"{{CompanyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Managers by Company",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/managers/{{CompanyID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managers",
+								"{{CompanyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Manager by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/managers/{{ManagerID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managers",
+								"{{ManagerID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Manager",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/managers/{{ManagerID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managers",
+								"{{ManagerID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Manager",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"AdditionalResponsibility\" : \" COO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/managers/{{ManagerID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managers",
+								"{{ManagerID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WorksFor",
+			"item": [
+				{
+					"name": "Assign Member to Project",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"MemberID\" : {{MemberID}},\r\n    \"ProjectID\" : {{ProjectID}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/works-for/project",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"works-for",
+								"project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Project-Member Associations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/works-for",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"works-for"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Projects by Member",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/works-for/member/{{MemberID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"works-for",
+								"member",
+								"{{MemberID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Members by Project",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/works-for/project/{{ProjectID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"works-for",
+								"project",
+								"{{ProjectID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unassign Member from Project",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"MemberID\" : {{MemberID}},\r\n    \"ProjectID\" : {{ProjectID}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/works-for",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"works-for"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task-Member",
+			"item": [
+				{
+					"name": "Assign Member to Task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"TaskID\": {{TaskID}}, \r\n    \"MemberID\" : {{MemberID}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/task-members/task",
+							"path": [
+								"task-members",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Assignments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task-members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task-members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Members Assigned to Task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/task-members/task/{{TaskID}}",
+							"path": [
+								"task-members",
+								"task",
+								"{{TaskID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks Assigned to Member",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/task-members/member/{{MemberID}}",
+							"path": [
+								"task-members",
+								"member",
+								"{{MemberID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unassign Member from Task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"TaskID\": {{TaskID}}, \r\n    \"MemberID\" : {{MemberID}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/task-members",
+							"path": [
+								"task-members"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HandledBy",
+			"item": [
+				{
+					"name": "Assign Manager to Project",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ManagerID\": {{ManagerID}},\r\n    \"ProjectID\": {{ProjectID}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/handled-by/project",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"handled-by",
+								"project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Manager Assignments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/handled-by",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"handled-by"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Projects by Manager",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/handled-by/{{ManagerID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"handled-by",
+								"{{ManagerID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Manager by Project",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/handled-by/project/{{ProjectID}}",
+							"path": [
+								"handled-by",
+								"project",
+								"{{ProjectID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Project Manager",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"ManagerID\" : {{ManagerID}},\r\n   \"ProjectID\" : {{ProjectID}} \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/handled-by/project/manager",
+							"path": [
+								"handled-by",
+								"project",
+								"manager"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unassign Manager from Project",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ManagerID\" : \"ManagerID\",\r\n    \"ProjectID\" : \"ProjectID\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/handled-by",
+							"path": [
+								"handled-by"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

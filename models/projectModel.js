@@ -4,12 +4,12 @@ const moment = require("moment");
 const Company = require("./companyModel");
 
 class Project extends Model {
-    constructor(Name, Description, StartDate, EndDate, Status, CompanyID) {
+    constructor(Name, Description, Status, CompanyID) {
         super();
         this.Name = Name;
         this.Description = Description;
-        this.StartDate = moment().format('YYYY-MM-DD HH:mm:ss');
-        this.EndDate = EndDate ? moment(EndDate).format('YYYY-MM-DD HH:mm:ss') : null;
+        this.StartDate = moment().format('YYYY-MM-DD');
+        this.EndDate = null;
         this.Status = Status;
         this.CompanyID = CompanyID;
     }
@@ -43,9 +43,9 @@ Project.init({
         allowNull: true
     },
     Status: {
-        type: DataTypes.STRING,
-        length: 255,
-        allowNull: true
+        type: DataTypes.ENUM('Pending', 'In Progress', 'Completed'),
+        allowNull: false,
+        defaultValue: 'Pending'
     },
     CompanyID: {
         type: DataTypes.INTEGER,
@@ -58,7 +58,7 @@ Project.init({
 },
     {
     sequelize,
-    modelName: Project,
+    modelName: 'Project',
     tableName: 'project',
     timestamps: false
 });

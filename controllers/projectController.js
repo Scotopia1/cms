@@ -2,6 +2,13 @@ const Project = require('../models/projectModel');
 const ProjectService = require('../services/projectService');
 
 const ProjectController = {
+
+    /**
+     * Get all projects by company ID
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getProjectsbyCompanyId: async (req, res) => {
         const companyId = req.params.CompanyID;
         try {
@@ -12,6 +19,12 @@ const ProjectController = {
         }
     },
 
+    /**
+     * Get project by name
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getProjectByName: async (req, res) => {
         const companyId = req.params.CompanyID;
         const projectName = req.params.name;
@@ -23,6 +36,12 @@ const ProjectController = {
         }
     },
 
+    /**
+     * Get project by ID
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     getProjectDetails: async (req, res) => {
         const projectId = req.params.ProjectID;
         try {
@@ -33,14 +52,20 @@ const ProjectController = {
         }
     },
 
+    /**
+     * Create a new project
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
     createProject: async (req, res) => {
         try {
             const CompanyID = req.params.CompanyID;
-            const {Name, Description, StartDate, EndDate, Status} = req.body;
-            if (!Name || !Description || !StartDate || !EndDate || !Status) {
+            const {Name, Description, Status} = req.body;
+            if (!Name || !Description || !Status) {
                 return res.status(400).json({message: 'All fields are required'});
             }
-            const project = new Project(Name, Description, StartDate, EndDate, Status, CompanyID);
+            const project = new Project(Name, Description, Status, CompanyID);
             const newProject = await ProjectService.createProject(project);
             res.status(201).json(newProject);
         } catch (error) {
@@ -48,6 +73,12 @@ const ProjectController = {
         }
     },
 
+    /**
+     * Update project by ID
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     updateProject: async (req, res) => {
         const projectId = req.params.ProjectID;
         const projectData = req.body;
@@ -59,6 +90,12 @@ const ProjectController = {
         }
     },
 
+    /**
+     * Delete project by ID
+     * @param req
+     * @param res
+     * @returns {Promise<void>}
+     */
     deleteProject: async (req, res) => {
         const projectId = req.params.ProjectID;
         try {

@@ -1,6 +1,5 @@
 const {DataTypes, Model} = require("sequelize");
 const sequelize = require('../config/db-sequelize');
-const moment = require("moment");
 const Company = require("./companyModel");
 
 class Member extends Model {
@@ -53,7 +52,7 @@ Member.init({
     }
 }, {
     sequelize,
-    modelName: Member,
+    modelName: 'Member',
     tableName: 'member',
     timestamps: false
 });

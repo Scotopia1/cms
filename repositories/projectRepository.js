@@ -3,6 +3,12 @@ const Project = require('../models/projectModel');
 const CompanyRepository = require('./companyRepository');
 
 const ProjectRepository = {
+
+    /**
+     * Get all projects
+     * @param companyId
+     * @returns {Promise<*>}
+     */
     getProjectsByCompanyId: async (companyId) => {
         try {
             const rows = await db.query('SELECT * FROM project WHERE CompanyID = ?', [companyId]);
@@ -12,6 +18,12 @@ const ProjectRepository = {
         }
     },
 
+    /**
+     * Get project by name
+     * @param companyId
+     * @param projectName
+     * @returns {Promise<*|null>}
+     */
     getProjectByName: async (companyId, projectName) => {
         try {
             const rows = await db.query('SELECT * FROM project WHERE CompanyID = ? AND Name = ?', [companyId, projectName]);
@@ -24,6 +36,11 @@ const ProjectRepository = {
         }
     },
 
+    /**
+     * Get project by ID
+     * @param projectId
+     * @returns {Promise<Project|null>}
+     */
     getProjectDetails: async (projectId) => {
         try {
             const rows = await db.query('SELECT * FROM project WHERE ProjectID = ?', [projectId]);
@@ -36,6 +53,11 @@ const ProjectRepository = {
         }
     },
 
+    /**
+     * Create a new project
+     * @param project
+     * @returns {Promise<{affectedRows: *}|{message: string}>}
+     */
     createProject: async (project) => {
         try {
             if (!(await CompanyRepository.companyExists(project.CompanyID))) {
@@ -62,6 +84,12 @@ const ProjectRepository = {
         }
     },
 
+    /**
+     * Update project
+     * @param projectId
+     * @param projectData
+     * @returns {Promise<{affectedRows: *}|{message: string}>}
+     */
     updateProject: async (projectId, projectData) => {
         try {
             if (!(await CompanyRepository.companyExists(projectData.CompanyID))) {
@@ -86,6 +114,11 @@ const ProjectRepository = {
         }
     },
 
+    /**
+     * Delete project
+     * @param projectId
+     * @returns {Promise<{affectedRows: *}>}
+     */
     deleteProject: async (projectId) => {
         try {
             let sql = `DELETE FROM project WHERE ProjectID = ?`;
@@ -98,6 +131,11 @@ const ProjectRepository = {
         }
     },
 
+    /**
+     * Check if a project exists
+     * @param projectId
+     * @returns {Promise<boolean>}
+     */
     projectExists: async (projectId) => {
         try {
             const sql = 'SELECT * FROM project WHERE ProjectID = ?';
