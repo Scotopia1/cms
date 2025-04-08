@@ -25,6 +25,14 @@ const MemberService = {
         }
     },
 
+    isPasswordValid: async (memberId, password) => {
+        try {
+            return await MemberRepository.isPasswordValid(memberId, password);
+        } catch (error) {
+            throw new Error('Error validating member password: ' + error.message);
+        }
+    },
+
     createMember: async (member) => {
         try {
             return await MemberRepository.createMember(member);

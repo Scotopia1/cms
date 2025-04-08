@@ -51,6 +51,31 @@ const MemberRepository = {
     },
 
     /**
+     * Check if the password is valid for a member
+     * @param memberId
+     * @param password
+     * @returns {Promise<void|*|{message: string}|boolean>}
+     */
+    isPasswordValid: async (memberId, password) => {
+        try {
+            if(await this.MemberExists(memberId)){
+                return {
+                    message: 'Member does not exist'
+                }
+            }
+            const sql = `SELECT Password FROM member WHERE MemberID = ?`;
+            const rows = await db.query(sql, [memberId]);
+            if (rows.length === 0) {
+                return false;
+            }
+            const hashedPassword = rows[0].Password;
+            return await Utils.comparePassword(password, hashedPassword);
+        } catch (error) {
+            throw new Error(`Error validating password for member with ID ${memberId}: ${error.message}`);
+        }
+    },
+
+    /**
      * Create a new member
      * @param member
      * @returns {Promise<{affectedRows: *, message: string}|{message: string}>}
@@ -64,7 +89,7 @@ const MemberRepository = {
                 }
             }
 
-            if (await this.MemberExists(member.Name, member.CompanyID)) {
+            if (await this.MemberExistsbyName(member.Name, member.CompanyID)) {
                 return {
                     message: 'Member already exists'
                 }
@@ -146,10 +171,26 @@ const MemberRepository = {
      * @returns {Promise<boolean>}
      * @constructor
      */
-    MemberExists: async (name, CompanyID) => {
+    MemberExistsbyName: async (name, CompanyID) => {
         try {
             const sql = `SELECT * FROM member WHERE Name = ? AND CompanyID = ?`;
             const rows = await db.query(sql, [name, CompanyID]);
+            return rows.length > 0;
+        } catch (error) {
+            throw new Error(`Error checking if member exists: ${error.message}`);
+        }
+    },
+
+    /**
+     * Check if a member exists by ID
+     * @param memberId
+     * @returns {Promise<boolean>}
+     * @constructor
+     */
+    MemberExists: async (memberId) => {
+        try {
+            const sql = `SELECT * FROM member WHERE MemberID = ?`;
+            const rows = await db.query(sql, [memberId]);
             return rows.length > 0;
         } catch (error) {
             throw new Error(`Error checking if member exists: ${error.message}`);

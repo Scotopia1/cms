@@ -91,82 +91,83 @@ npm run dev
 ## API Routes Documentation
 
 ### Company Routes
-| Method | Endpoint                  | Description                      | Validators              | Controller Method          |
-|--------|---------------------------|----------------------------------|-------------------------|----------------------------|
-| GET    | /companies                | Get all companies               | -                       | CompanyController.getCompanies |
-| GET    | /companies/name/:name     | Get company by name             | -                       | CompanyController.getCompanyByName |
-| GET    | /companies/:CompanyID     | Get company details             | validateCompanyId       | CompanyController.getCompanyDetails |
-| POST   | /companies                | Create company                  | validateCompany         | CompanyController.createCompany |
-| PUT    | /companies/:CompanyID     | Update company                  | validateCompanyId       | CompanyController.updateCompany |
-| DELETE | /companies/:CompanyID     | Delete company                  | validateCompanyId       | CompanyController.deleteCompany |
+| Method | Endpoint                  | Description                      | Validators              | Controller Method                   |
+|--------|---------------------------|----------------------------------|-------------------------|-------------------------------------|
+| GET    | /companies                | Get all companies                | -                       | CompanyController.getCompanies      |
+| GET    | /companies/name/:name     | Get company by name              | -                       | CompanyController.getCompanyByName  |
+| GET    | /companies/:CompanyID     | Get company details              | validateCompanyId       | CompanyController.getCompanyDetails |
+| POST   | /companies                | Create company                   | validateCompany         | CompanyController.createCompany     |
+| PUT    | /companies/:CompanyID     | Update company                   | validateCompanyId       | CompanyController.updateCompany     |
+| DELETE | /companies/:CompanyID     | Delete company                   | validateCompanyId       | CompanyController.deleteCompany     |
 
 ### Project Routes
-| Method | Endpoint                          | Description                      | Validators              | Controller Method          |
-|--------|-----------------------------------|----------------------------------|-------------------------|----------------------------|
-| GET    | /projects/:CompanyID             | Get all projects                | validateCompanyId       | ProjectController.getProjectsByCompanyId |
-| GET    | /projects/:CompanyID/:name       | Get project by name             | validateCompanyId       | ProjectController.getProjectByName |
-| GET    | /projects/:ProjectID             | Get project details             | validateProjectId       | ProjectController.getProjectDetails |
-| POST   | /projects/:CompanyID             | Create project                  | validateCompanyId, validateProject | ProjectController.createProject |
-| PUT    | /projects/:ProjectID             | Update project                  | validateProjectId       | ProjectController.updateProject |
-| DELETE | /projects/:ProjectID             | Delete project                  | validateProjectId       | ProjectController.deleteProject |
+| Method | Endpoint                           | Description                       | Validators                           | Controller Method                        |
+|--------|------------------------------------|-----------------------------------|--------------------------------------|------------------------------------------|
+| GET    | /projects/:CompanyID               | Get all projects                  | validateCompanyId                    | ProjectController.getProjectsByCompanyId |
+| GET    | /projects/:CompanyID/:name         | Get project by name               | validateCompanyId                    | ProjectController.getProjectByName       |
+| GET    | /projects/:ProjectID               | Get project details               | validateProjectId                    | ProjectController.getProjectDetails      |
+| POST   | /projects/:CompanyID               | Create project                    | validateCompanyId, validateProject   | ProjectController.createProject          |
+| PUT    | /projects/:ProjectID               | Update project                    | validateProjectId                    | ProjectController.updateProject          |
+| DELETE | /projects/:ProjectID               | Delete project                    | validateProjectId                    | ProjectController.deleteProject          |
 
 ### Task Routes
-| Method | Endpoint                          | Description                      | Validators              | Controller Method          |
-|--------|-----------------------------------|----------------------------------|-------------------------|----------------------------|
-| GET    | /tasks/:ProjectID                | Get all tasks by project        | validateProjectId       | TasksController.getTasksByProjectId |
-| GET    | /tasks/:ProjectID/:Title         | Get task by title               | validateProjectId, validateTask | TasksController.getTaskByTitle |
-| GET    | /tasks/:ProjectID/:TaskID        | Get task by ID                  | validateProjectId, validateTaskId | TasksController.getTaskById |
-| POST   | /tasks/:ProjectID                | Create task                     | validateProjectId, validateTask | TasksController.createTask |
-| PUT    | /tasks/:ProjectID/:TaskID        | Update task                     | validateProjectId, validateTaskId | TasksController.updateTask |
-| DELETE | /tasks/:TaskID                   | Delete task                     | validateProjectId, validateTaskId | TasksController.deleteTask |
+| Method | Endpoint                           | Description                      | Validators                        | Controller Method                   |
+|--------|------------------------------------|----------------------------------|-----------------------------------|-------------------------------------|
+| GET    | /tasks/:ProjectID                  | Get all tasks by project         | validateProjectId                 | TasksController.getTasksByProjectId |
+| GET    | /tasks/:ProjectID/:Title           | Get task by title                | validateProjectId, validateTask   | TasksController.getTaskByTitle      |
+| GET    | /tasks/:ProjectID/:TaskID          | Get task by ID                   | validateProjectId, validateTaskId | TasksController.getTaskById         |
+| POST   | /tasks/:ProjectID                  | Create task                      | validateProjectId, validateTask   | TasksController.createTask          |
+| PUT    | /tasks/:ProjectID/:TaskID          | Update task                      | validateProjectId, validateTaskId | TasksController.updateTask          |
+| DELETE | /tasks/:TaskID                     | Delete task                      | validateProjectId, validateTaskId | TasksController.deleteTask          |
 
 ### Member Routes
-| Method | Endpoint                          | Description                      | Validators              | Controller Method          |
-|--------|-----------------------------------|----------------------------------|-------------------------|----------------------------|
-| GET    | /members/:CompanyID              | Get all members                 | validateMemberCompanyId | MemberController.getAllMembersByCompanyId |
-| GET    | /members/:CompanyID/:name        | Get member by name              | validateMemberCompanyId | MemberController.getMemberByName |
-| GET    | /members/:MemberID               | Get member details              | -                       | MemberController.getMemberDetails |
-| POST   | /members/:CompanyID              | Create member                   | validateMemberCompanyId, validateMember | MemberController.createMember |
-| PUT    | /members/:MemberID               | Update member                   | validateMemberId        | MemberController.updateMember |
-| DELETE | /members/:MemberID               | Delete member                   | validateMemberId        | MemberController.deleteMember |
+| Method | Endpoint                  | Description        | Validators                              | Controller Method                         |
+|--------|---------------------------|--------------------|-----------------------------------------|-------------------------------------------|
+| GET    | /members/:CompanyID       | Get all members    | validateMemberCompanyId                 | MemberController.getAllMembersByCompanyId |
+| GET    | /members/:CompanyID/:name | Get member by name | validateMemberCompanyId                 | MemberController.getMemberByName          |
+| GET    | /members/:MemberID        | Get member details | -                                       | MemberController.getMemberDetails         |
+| GET    | /members/:MemberID        | Validate password  | validateMemberId                        | MemberController.isPasswordValid          |
+| POST   | /members/:CompanyID       | Create member      | validateMemberCompanyId, validateMember | MemberController.createMember             |
+| PUT    | /members/:MemberID        | Update member      | validateMemberId                        | MemberController.updateMember             |
+| DELETE | /members/:MemberID        | Delete member      | validateMemberId                        | MemberController.deleteMember             |
 
 ### Manager Routes
-| Method | Endpoint                          | Description                      | Validators              | Controller Method          |
-|--------|-----------------------------------|----------------------------------|-------------------------|----------------------------|
-| GET    | /managers/:CompanyID             | Get all managers                | validateCompanyId       | ManagerController.getManagers |
-| GET    | /managers/:ManagerID             | Get manager by ID               | validateManagerId       | ManagerController.getManagerById |
-| POST   | /managers/:CompanyID             | Create manager                  | validateCompanyId, validateManager | ManagerController.createManager |
-| PUT    | /managers/:ManagerID             | Update manager                  | validateManagerId       | ManagerController.updateManager |
-| DELETE | /managers/:ManagerID             | Delete manager                  | validateManagerId       | ManagerController.deleteManager |
+| Method | Endpoint                          | Description                      | Validators                           | Controller Method                |
+|--------|-----------------------------------|----------------------------------|--------------------------------------|----------------------------------|
+| GET    | /managers/:CompanyID              | Get all managers                 | validateCompanyId                    | ManagerController.getManagers    |
+| GET    | /managers/:ManagerID              | Get manager by ID                | validateManagerId                    | ManagerController.getManagerById |
+| POST   | /managers/:CompanyID              | Create manager                   | validateCompanyId, validateManager   | ManagerController.createManager  |
+| PUT    | /managers/:ManagerID              | Update manager                   | validateManagerId                    | ManagerController.updateManager  |
+| DELETE | /managers/:ManagerID              | Delete manager                   | validateManagerId                    | ManagerController.deleteManager  |
 
 ### Task-Member Assignment Routes
-| Method | Endpoint                          | Description                      | Validators              | Controller Method          |
-|--------|-----------------------------------|----------------------------------|-------------------------|----------------------------|
-| GET    | /task-members                    | Get all task members            | -                       | taskMemberController.getAllTaskMembers |
-| GET    | /task-members/task/:TaskID       | Get members assigned to task    | validateTaskId          | taskMemberController.getMembersAssignedToTask |
-| GET    | /task-members/member/:MemberID   | Get tasks assigned to member    | validateMemberId        | taskMemberController.getTasksAssignedToMember |
-| GET    | /task-members/member/:MemberID/tasks/:TaskID | Get task details for member | validateMemberId, validateTaskId | taskMemberController.getTaskDetailsForMember |
-| POST   | /task-members/task               | Assign member to task           | -                       | taskMemberController.assignMemberToTask |
-| DELETE | /task-members                    | Unassign member from task       | -                       | taskMemberController.unassignMemberFromTask |
+| Method | Endpoint                                     | Description                         | Validators                       | Controller Method                             |
+|--------|----------------------------------------------|-------------------------------------|----------------------------------|-----------------------------------------------|
+| GET    | /task-members                                | Get all task members                | -                                | taskMemberController.getAllTaskMembers        |
+| GET    | /task-members/task/:TaskID                   | Get members assigned to task        | validateTaskId                   | taskMemberController.getMembersAssignedToTask |
+| GET    | /task-members/member/:MemberID               | Get tasks assigned to member        | validateMemberId                 | taskMemberController.getTasksAssignedToMember |
+| GET    | /task-members/member/:MemberID/tasks/:TaskID | Get task details for member         | validateMemberId, validateTaskId | taskMemberController.getTaskDetailsForMember  |
+| POST   | /task-members/task                           | Assign member to task               | -                                | taskMemberController.assignMemberToTask       |
+| DELETE | /task-members                                | Unassign member from task           | -                                | taskMemberController.unassignMemberFromTask   |
 
 ### WorksFor Routes (Project-Member Association)
-| Method | Endpoint                          | Description                      | Validators              | Controller Method          |
-|--------|-----------------------------------|----------------------------------|-------------------------|----------------------------|
-| GET    | /works-for                       | Get all work associations       | -                       | worksForController.getAllWorksFor |
-| GET    | /works-for/member/:MemberID      | Get projects by member          | validateMemberId        | worksForController.getProjectsByMember |
-| GET    | /works-for/project/:ProjectID    | Get members by project          | validateProjectId       | worksForController.getMembersByProject |
-| POST   | /works-for/project               | Assign member to project        | -                       | worksForController.assignMemberToProject |
-| DELETE | /works-for                       | Unassign member from project    | -                       | worksForController.unassignMemberFromProject |
+| Method | Endpoint                           | Description                       | Validators              | Controller Method                            |
+|--------|------------------------------------|-----------------------------------|-------------------------|----------------------------------------------|
+| GET    | /works-for                         | Get all work associations         | -                       | worksForController.getAllWorksFor            |
+| GET    | /works-for/member/:MemberID        | Get projects by member            | validateMemberId        | worksForController.getProjectsByMember       |
+| GET    | /works-for/project/:ProjectID      | Get members by project            | validateProjectId       | worksForController.getMembersByProject       |
+| POST   | /works-for/project                 | Assign member to project          | -                       | worksForController.assignMemberToProject     |
+| DELETE | /works-for                         | Unassign member from project      | -                       | worksForController.unassignMemberFromProject |
 
 ### HandledBy Routes (Project-Manager Association)
-| Method | Endpoint                          | Description                      | Validators              | Controller Method          |
-|--------|-----------------------------------|----------------------------------|-------------------------|----------------------------|
-| GET    | /handled-by                      | Get all manager assignments     | -                       | handledByController.getAllHandledBy |
-| GET    | /handled-by/:ManagerID           | Get projects by manager         | validateManagerId       | handledByController.getProjectsByManager |
-| GET    | /handled-by/project/:ProjectID   | Get manager by project          | validateProjectId       | handledByController.getManagerByProject |
-| POST   | /handled-by/project              | Assign manager to project       | -                       | handledByController.assignManagerToProject |
-| PUT    | /handled-by/project/manager      | Update project manager          | -                       | handledByController.updateHandledBy |
-| DELETE | /handled-by                      | Unassign manager from project   | -                       | handledByController.unassignManagerFromProject |
+| Method | Endpoint                          | Description                       | Validators                | Controller Method                              |
+|--------|-----------------------------------|-----------------------------------|---------------------------|------------------------------------------------|
+| GET    | /handled-by                       | Get all manager assignments       | -                         | handledByController.getAllHandledBy            |
+| GET    | /handled-by/:ManagerID            | Get projects by manager           | validateManagerId         | handledByController.getProjectsByManager       |
+| GET    | /handled-by/project/:ProjectID    | Get manager by project            | validateProjectId         | handledByController.getManagerByProject        |
+| POST   | /handled-by/project               | Assign manager to project         | -                         | handledByController.assignManagerToProject     |
+| PUT    | /handled-by/project/manager       | Update project manager            | -                         | handledByController.updateHandledBy            |
+| DELETE | /handled-by                       | Unassign manager from project     | -                         | handledByController.unassignManagerFromProject |
 ---
 
 ## 🛠 Technologies Used

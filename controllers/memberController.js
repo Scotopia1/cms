@@ -62,6 +62,33 @@ const MemberController = {
     },
 
     /**
+     * Check if a member's password is valid
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     * @constructor
+     */
+    isPasswordValid: async (req, res) => {
+        try {
+            const memberId = req.params.MemberID;
+            const { Password } = req.body;
+            if (!memberId) {
+                return res.status(404).json({ message: 'Member not found' });
+            }
+            if (!Password) {
+                return res.status(400).json({ message: 'Password is required' });
+            }
+            const member = await MemberService.isPasswordValid(memberId, Password);
+            if (!member) {
+                return res.status(401).json({ message: 'Invalid password' });
+            }
+            res.status(200).json({ message: 'Password is valid' });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+
+    /**
      * Create a new member for a specific company
      * @param req
      * @param res
