@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "5c591739-95c8-4dae-b5af-d4e595a9e168",
 		"name": "CMS",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "32290251"
 	},
 	"item": [
@@ -35,15 +35,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/companies",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"companies"
-							]
-						}
+						"url": "{{base_url}}/companies"
 					},
 					"response": []
 				},
@@ -52,16 +44,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/companies/",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"companies",
-								""
-							]
-						}
+						"url": "{{base_url}}/companies/"
 					},
 					"response": []
 				},
@@ -95,16 +78,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/companies/{{CompanyID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"companies",
-								"{{CompanyID}}"
-							]
-						}
+						"url": "{{base_url}}/companies/{{CompanyID}}"
 					},
 					"response": []
 				},
@@ -122,16 +96,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/companies/{{CompanyID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"companies",
-								"{{CompanyID}}"
-							]
-						}
+						"url": "{{base_url}}/companies/{{CompanyID}}"
 					},
 					"response": []
 				},
@@ -140,16 +105,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/companies/{{CompanyID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"companies",
-								"{{CompanyID}}"
-							]
-						}
+						"url": "{{base_url}}/companies/{{CompanyID}}"
 					},
 					"response": []
 				}
@@ -172,16 +128,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/companies/{{CompanyID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"companies",
-								"{{CompanyID}}"
-							]
-						}
+						"url": "{{base_url}}/companies/{{CompanyID}}"
 					},
 					"response": []
 				},
@@ -190,16 +137,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/members/{{CompanyID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"members",
-								"{{CompanyID}}"
-							]
-						}
+						"url": "{{base_url}}/members/{{CompanyID}}"
 					},
 					"response": []
 				},
@@ -233,16 +171,25 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/members/{{MemberID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"members",
-								"{{MemberID}}"
-							]
-						}
+						"url": "{{base_url}}/members/{{MemberID}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Is Password Valid",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Password\" : \"SCA@RWASD@12-\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/members/{{MemberID}}"
 					},
 					"response": []
 				},
@@ -260,16 +207,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/members/{{MemberID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"members",
-								"{{MemberID}}"
-							]
-						}
+						"url": "{{base_url}}/members/{{MemberID}}"
 					},
 					"response": []
 				},
@@ -278,16 +216,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/members/{{MemberID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"members",
-								"{{MemberID}}"
-							]
-						}
+						"url": "{{base_url}}/members/{{MemberID}}"
 					},
 					"response": []
 				}
@@ -310,17 +239,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/companies/projects/",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"companies",
-								"projects",
-								""
-							]
-						}
+						"url": "{{base_url}}/companies/projects/"
 					},
 					"response": []
 				},
@@ -329,16 +248,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/projects/{{CompanyID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"projects",
-								"{{CompanyID}}"
-							]
-						}
+						"url": "{{base_url}}/projects/{{CompanyID}}"
 					},
 					"response": []
 				},
@@ -372,16 +282,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/projects/{{ProjectID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"projects",
-								"{{ProjectID}}"
-							]
-						}
+						"url": "{{base_url}}/projects/{{ProjectID}}"
 					},
 					"response": []
 				},
@@ -399,16 +300,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/projects/{{ProjectID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"projects",
-								"{{ProjectID}}"
-							]
-						}
+						"url": "{{base_url}}/projects/{{ProjectID}}"
 					},
 					"response": []
 				},
@@ -426,16 +318,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/projects/{{ProjectID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"projects",
-								"{{ProjectID}}"
-							]
-						}
+						"url": "{{base_url}}/projects/{{ProjectID}}"
 					},
 					"response": []
 				}
@@ -458,16 +341,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/tasks/{{ProjectID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tasks",
-								"{{ProjectID}}"
-							]
-						}
+						"url": "{{base_url}}/tasks/{{ProjectID}}"
 					},
 					"response": []
 				},
@@ -476,16 +350,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tasks/{{ProjectID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tasks",
-								"{{ProjectID}}"
-							]
-						}
+						"url": "{{base_url}}/tasks/{{ProjectID}}"
 					},
 					"response": []
 				},
@@ -519,17 +384,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tasks/{{ProjectID}}/{{TaskID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tasks",
-								"{{ProjectID}}",
-								"{{TaskID}}"
-							]
-						}
+						"url": "{{base_url}}/tasks/{{ProjectID}}/{{TaskID}}"
 					},
 					"response": []
 				},
@@ -547,17 +402,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/tasks/{{ProjectID}}/{{TaskID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tasks",
-								"{{ProjectID}}",
-								"{{TaskID}}"
-							]
-						}
+						"url": "{{base_url}}/tasks/{{ProjectID}}/{{TaskID}}"
 					},
 					"response": []
 				},
@@ -566,16 +411,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tasks/{{TaskID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tasks",
-								"{{TaskID}}"
-							]
-						}
+						"url": "{{base_url}}/tasks/{{TaskID}}"
 					},
 					"response": []
 				}
@@ -598,16 +434,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/managers/{{CompanyID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"managers",
-								"{{CompanyID}}"
-							]
-						}
+						"url": "{{base_url}}/managers/{{CompanyID}}"
 					},
 					"response": []
 				},
@@ -616,16 +443,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/managers/{{CompanyID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"managers",
-								"{{CompanyID}}"
-							]
-						}
+						"url": "{{base_url}}/managers/{{CompanyID}}"
 					},
 					"response": []
 				},
@@ -634,16 +452,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/managers/{{ManagerID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"managers",
-								"{{ManagerID}}"
-							]
-						}
+						"url": "{{base_url}}/managers/{{ManagerID}}"
 					},
 					"response": []
 				},
@@ -652,16 +461,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/managers/{{ManagerID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"managers",
-								"{{ManagerID}}"
-							]
-						}
+						"url": "{{base_url}}/managers/{{ManagerID}}"
 					},
 					"response": []
 				},
@@ -679,16 +479,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/managers/{{ManagerID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"managers",
-								"{{ManagerID}}"
-							]
-						}
+						"url": "{{base_url}}/managers/{{ManagerID}}"
 					},
 					"response": []
 				}
@@ -711,16 +502,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/works-for/project",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"works-for",
-								"project"
-							]
-						}
+						"url": "{{base_url}}/works-for/project"
 					},
 					"response": []
 				},
@@ -729,15 +511,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/works-for",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"works-for"
-							]
-						}
+						"url": "{{base_url}}/works-for"
 					},
 					"response": []
 				},
@@ -746,17 +520,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/works-for/member/{{MemberID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"works-for",
-								"member",
-								"{{MemberID}}"
-							]
-						}
+						"url": "{{base_url}}/works-for/member/{{MemberID}}"
 					},
 					"response": []
 				},
@@ -765,17 +529,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/works-for/project/{{ProjectID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"works-for",
-								"project",
-								"{{ProjectID}}"
-							]
-						}
+						"url": "{{base_url}}/works-for/project/{{ProjectID}}"
 					},
 					"response": []
 				},
@@ -793,15 +547,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/works-for",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"works-for"
-							]
-						}
+						"url": "{{base_url}}/works-for"
 					},
 					"response": []
 				}
@@ -824,13 +570,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "/task-members/task",
-							"path": [
-								"task-members",
-								"task"
-							]
-						}
+						"url": "/task-members/task"
 					},
 					"response": []
 				},
@@ -839,15 +579,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/task-members",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"task-members"
-							]
-						}
+						"url": "{{base_url}}/task-members"
 					},
 					"response": []
 				},
@@ -856,14 +588,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "/task-members/task/{{TaskID}}",
-							"path": [
-								"task-members",
-								"task",
-								"{{TaskID}}"
-							]
-						}
+						"url": "/task-members/task/{{TaskID}}"
 					},
 					"response": []
 				},
@@ -872,14 +597,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "/task-members/member/{{MemberID}}",
-							"path": [
-								"task-members",
-								"member",
-								"{{MemberID}}"
-							]
-						}
+						"url": "/task-members/member/{{MemberID}}"
 					},
 					"response": []
 				},
@@ -897,12 +615,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "/task-members",
-							"path": [
-								"task-members"
-							]
-						}
+						"url": "/task-members"
 					},
 					"response": []
 				}
@@ -925,16 +638,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/handled-by/project",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"handled-by",
-								"project"
-							]
-						}
+						"url": "{{base_url}}/handled-by/project"
 					},
 					"response": []
 				},
@@ -943,15 +647,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/handled-by",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"handled-by"
-							]
-						}
+						"url": "{{base_url}}/handled-by"
 					},
 					"response": []
 				},
@@ -960,16 +656,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{base_url}}/handled-by/{{ManagerID}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"handled-by",
-								"{{ManagerID}}"
-							]
-						}
+						"url": "{{base_url}}/handled-by/{{ManagerID}}"
 					},
 					"response": []
 				},
@@ -978,14 +665,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "/handled-by/project/{{ProjectID}}",
-							"path": [
-								"handled-by",
-								"project",
-								"{{ProjectID}}"
-							]
-						}
+						"url": "/handled-by/project/{{ProjectID}}"
 					},
 					"response": []
 				},
@@ -1003,14 +683,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "/handled-by/project/manager",
-							"path": [
-								"handled-by",
-								"project",
-								"manager"
-							]
-						}
+						"url": "/handled-by/project/manager"
 					},
 					"response": []
 				},
@@ -1028,12 +701,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "/handled-by",
-							"path": [
-								"handled-by"
-							]
-						}
+						"url": "/handled-by"
 					},
 					"response": []
 				}
