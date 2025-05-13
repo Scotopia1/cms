@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 // security package
 const cors = require('cors');
@@ -22,6 +23,18 @@ app.use(cors());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Set up view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Use EJS layouts middleware
+const expressLayouts = require('./middleware/expressLayouts');
+app.use(expressLayouts());
 
 // Routes
 app.use('/api/cms/companies', companyRoutes);

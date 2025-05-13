@@ -32,7 +32,7 @@ Ensure you have the following installed on your system:
 │── compaies-db.sql                # SQL scripts for database setup
 │── package.json        # Dependencies and scripts
 │── README.md           # Project documentation
-│── server.js           # Entry point of the application
+│── index.js           # Entry point of the application
 ```
 
 

@@ -18,6 +18,8 @@ const ProjectRepository = {
         }
     },
 
+
+
     /**
      * Get project by name
      * @param companyId
@@ -144,7 +146,8 @@ const ProjectRepository = {
         } catch (error) {
             throw new Error('Error checking project existence');
         }
-    }
+    },
+
 }
 
 module.exports = ProjectRepository;
