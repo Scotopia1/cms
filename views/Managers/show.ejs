@@ -1,0 +1,29 @@
+<div class="container mt-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 40rem;">
+        <div class="card-header">
+            <h1 class="card-title h3 mb-0"><%= manager.name %></h1>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Manager ID:</dt>
+                <dd class="col-sm-9"><%= manager.id %></dd>
+
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9"><%= manager.email %></dd>
+
+                <dt class="col-sm-3">Department:</dt>
+                <dd class="col-sm-9"><%= manager.department || 'N/A' %></dd>
+
+                <dt class="col-sm-3">Company ID:</dt>
+                <dd class="col-sm-9"><%= manager.company_id %></dd>
+
+                <dt class="col-sm-3">Hire Date:</dt>
+                <dd class="col-sm-9"><%= manager.hire_date ? new Date(manager.hire_date).toLocaleDateString() : 'N/A' %></dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a href="/managers" class="btn btn-secondary me-2">Back to Managers</a>
+            <a href="/managers/edit/<%= manager.id %>" class="btn btn-primary">Edit Manager</a>
+        </div>
+    </div>
+</div>

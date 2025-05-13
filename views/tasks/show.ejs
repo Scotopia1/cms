@@ -1,0 +1,32 @@
+<div class="container mt-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 45rem;">
+        <div class="card-header">
+            <h1 class="card-title h3 mb-0"><%= task.title %></h1>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">Task ID:</dt>
+                <dd class="col-sm-8"><%= task.id %></dd>
+
+                <dt class="col-sm-4">Project ID:</dt>
+                <dd class="col-sm-8"><%= task.project_id %></dd>
+
+                <dt class="col-sm-4">Description:</dt>
+                <dd class="col-sm-8" style="white-space: pre-wrap;"><%= task.description || 'No description provided.' %></dd>
+
+                <dt class="col-sm-4">Due Date:</dt>
+                <dd class="col-sm-8"><%= task.due_date ? new Date(task.due_date).toLocaleDateString() : 'N/A' %></dd>
+
+                <dt class="col-sm-4">Status:</dt>
+                <dd class="col-sm-8"><%= task.status || 'N/A' %></dd>
+
+                <dt class="col-sm-4">Priority:</dt>
+                <dd class="col-sm-8"><%= task.priority || 'N/A' %></dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a href="/tasks" class="btn btn-secondary me-2">Back to Tasks</a>
+            <a href="/tasks/edit/<%= task.id %>" class="btn btn-primary">Edit Task</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4">Tasks</h1>
+        <a href="/tasks/new" class="btn btn-primary">Add New Task</a>
+    </div>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <div class="alert <%= message.type === 'success' ? 'alert-success' : 'alert-danger' %> alert-dismissible fade show" role="alert">
+            <%= message.text %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <% if (tasks && tasks.length > 0) { %>
+        <div class="list-group">
+            <% tasks.forEach(task => { %>
+                <div class="list-group-item list-group-item-action flex-column align-items-start mb-2 shadow-sm">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><%= task.title %></h5>
+                        <small>Due: <%= task.due_date ? new Date(task.due_date).toLocaleDateString() : 'N/A' %></small>
+                    </div>
+                    <p class="mb-1"><%= task.description ? task.description.substring(0, 100) + (task.description.length > 100 ? '...' : '') : 'No description.' %></p>
+                    <small class="text-muted">
+                        Project ID: <%= task.project_id %> | Status: <%= task.status || 'N/A' %>
+                    </small>
+                    <div class="d-flex justify-content-end mt-2">
+                        <a href="/tasks/<%= task.id %>" class="btn btn-outline-secondary btn-sm me-2">View</a>
+                        <a href="/tasks/edit/<%= task.id %>" class="btn btn-outline-primary btn-sm me-2">Edit</a>
+                        <form action="/tasks/delete/<%= task.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this task?');" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <div class="text-center py-5">
+            <p class="lead text-muted">No tasks found.</p>
+            <p class="mt-2">Why not add one?</p>
+        </div>
+    <% } %>
+</div>

@@ -2287,7 +2287,7 @@ CREATE TABLE IF NOT EXISTS `events_statements_current` (
   `ROWS_EXAMINED` bigint(20) unsigned NOT NULL COMMENT 'Number of rows read during the statement''s execution.',
   `CREATED_TMP_DISK_TABLES` bigint(20) unsigned NOT NULL COMMENT 'Number of on-disk temp tables created by the statement.',
   `CREATED_TMP_TABLES` bigint(20) unsigned NOT NULL COMMENT 'Number of temp tables created by the statement.',
-  `SELECT_FULL_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which did not use an index.',
+  `SELECT_FULL_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which did not use an index.ejs.',
   `SELECT_FULL_RANGE_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which used a range search of the first table.',
   `SELECT_RANGE` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which used a range of the first table.',
   `SELECT_RANGE_CHECK` bigint(20) unsigned NOT NULL COMMENT 'Number of joins without keys performed by the statement that check for key usage after each row.',
@@ -2296,8 +2296,8 @@ CREATE TABLE IF NOT EXISTS `events_statements_current` (
   `SORT_RANGE` bigint(20) unsigned NOT NULL COMMENT 'Number of sorts performed by the statement which used a range.',
   `SORT_ROWS` bigint(20) unsigned NOT NULL COMMENT 'Number of rows sorted by the statement.',
   `SORT_SCAN` bigint(20) unsigned NOT NULL COMMENT 'Number of sorts performed by the statement which used a full table scan.',
-  `NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if the statement performed a table scan with an index, 1 if without an index.',
-  `NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if a good index was found for the statement, 1 if no good index was found. See the Range checked for each record description in the EXPLAIN article.',
+  `NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if the statement performed a table scan with an index.ejs, 1 if without an index.ejs.',
+  `NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if a good index.ejs was found for the statement, 1 if no good index.ejs was found. See the Range checked for each record description in the EXPLAIN article.',
   `NESTING_EVENT_ID` bigint(20) unsigned DEFAULT NULL COMMENT 'NULL for top level statements. The parent statement event id for nested statements (stored programs).',
   `NESTING_EVENT_TYPE` enum('TRANSACTION','STATEMENT','STAGE','WAIT') DEFAULT NULL COMMENT 'NULL for top level statements. The parent statement event type for nested statements (stored programs).',
   `NESTING_EVENT_LEVEL` int(11) DEFAULT NULL COMMENT '0 for top level statements. The parent statement level plus 1 for nested statements (stored programs).'
@@ -2334,7 +2334,7 @@ CREATE TABLE IF NOT EXISTS `events_statements_history` (
   `ROWS_EXAMINED` bigint(20) unsigned NOT NULL COMMENT 'Number of rows read during the statement''s execution.',
   `CREATED_TMP_DISK_TABLES` bigint(20) unsigned NOT NULL COMMENT 'Number of on-disk temp tables created by the statement.',
   `CREATED_TMP_TABLES` bigint(20) unsigned NOT NULL COMMENT 'Number of temp tables created by the statement.',
-  `SELECT_FULL_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which did not use an index.',
+  `SELECT_FULL_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which did not use an index.ejs.',
   `SELECT_FULL_RANGE_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which used a range search of the first table.',
   `SELECT_RANGE` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which used a range of the first table.',
   `SELECT_RANGE_CHECK` bigint(20) unsigned NOT NULL COMMENT 'Number of joins without keys performed by the statement that check for key usage after each row.',
@@ -2343,8 +2343,8 @@ CREATE TABLE IF NOT EXISTS `events_statements_history` (
   `SORT_RANGE` bigint(20) unsigned NOT NULL COMMENT 'Number of sorts performed by the statement which used a range.',
   `SORT_ROWS` bigint(20) unsigned NOT NULL COMMENT 'Number of rows sorted by the statement.',
   `SORT_SCAN` bigint(20) unsigned NOT NULL COMMENT 'Number of sorts performed by the statement which used a full table scan.',
-  `NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if the statement performed a table scan with an index, 1 if without an index.',
-  `NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if a good index was found for the statement, 1 if no good index was found. See the Range checked for each record description in the EXPLAIN article.',
+  `NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if the statement performed a table scan with an index.ejs, 1 if without an index.ejs.',
+  `NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if a good index.ejs was found for the statement, 1 if no good index.ejs was found. See the Range checked for each record description in the EXPLAIN article.',
   `NESTING_EVENT_ID` bigint(20) unsigned DEFAULT NULL COMMENT 'NULL for top level statements. The parent statement event id for nested statements (stored programs).',
   `NESTING_EVENT_TYPE` enum('TRANSACTION','STATEMENT','STAGE','WAIT') DEFAULT NULL COMMENT 'NULL for top level statements. The parent statement event type for nested statements (stored programs).',
   `NESTING_EVENT_LEVEL` int(11) DEFAULT NULL COMMENT '0 for top level statements. The parent statement level plus 1 for nested statements (stored programs).'
@@ -2381,7 +2381,7 @@ CREATE TABLE IF NOT EXISTS `events_statements_history_long` (
   `ROWS_EXAMINED` bigint(20) unsigned NOT NULL COMMENT 'Number of rows read during the statement''s execution.',
   `CREATED_TMP_DISK_TABLES` bigint(20) unsigned NOT NULL COMMENT 'Number of on-disk temp tables created by the statement.',
   `CREATED_TMP_TABLES` bigint(20) unsigned NOT NULL COMMENT 'Number of temp tables created by the statement.',
-  `SELECT_FULL_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which did not use an index.',
+  `SELECT_FULL_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which did not use an index.ejs.',
   `SELECT_FULL_RANGE_JOIN` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which used a range search of the first table.',
   `SELECT_RANGE` bigint(20) unsigned NOT NULL COMMENT 'Number of joins performed by the statement which used a range of the first table.',
   `SELECT_RANGE_CHECK` bigint(20) unsigned NOT NULL COMMENT 'Number of joins without keys performed by the statement that check for key usage after each row.',
@@ -2390,8 +2390,8 @@ CREATE TABLE IF NOT EXISTS `events_statements_history_long` (
   `SORT_RANGE` bigint(20) unsigned NOT NULL COMMENT 'Number of sorts performed by the statement which used a range.',
   `SORT_ROWS` bigint(20) unsigned NOT NULL COMMENT 'Number of rows sorted by the statement.',
   `SORT_SCAN` bigint(20) unsigned NOT NULL COMMENT 'Number of sorts performed by the statement which used a full table scan.',
-  `NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if the statement performed a table scan with an index, 1 if without an index.',
-  `NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if a good index was found for the statement, 1 if no good index was found. See the Range checked for each record description in the EXPLAIN article.',
+  `NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if the statement performed a table scan with an index.ejs, 1 if without an index.ejs.',
+  `NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT '0 if a good index.ejs was found for the statement, 1 if no good index.ejs was found. See the Range checked for each record description in the EXPLAIN article.',
   `NESTING_EVENT_ID` bigint(20) unsigned DEFAULT NULL COMMENT 'NULL for top level statements. The parent statement event id for nested statements (stored programs).',
   `NESTING_EVENT_TYPE` enum('TRANSACTION','STATEMENT','STAGE','WAIT') DEFAULT NULL COMMENT 'NULL for top level statements. The parent statement event type for nested statements (stored programs).',
   `NESTING_EVENT_LEVEL` int(11) DEFAULT NULL COMMENT '0 for top level statements. The parent statement level plus 1 for nested statements (stored programs).'
@@ -2531,8 +2531,8 @@ CREATE TABLE IF NOT EXISTS `events_statements_summary_by_program` (
   `SUM_SORT_RANGE` bigint(20) unsigned NOT NULL COMMENT 'The total number of sorts that were done using ranges for the summarized statements.',
   `SUM_SORT_ROWS` bigint(20) unsigned NOT NULL COMMENT 'The total number of sorted rows that were sorted by the summarized statements.',
   `SUM_SORT_SCAN` bigint(20) unsigned NOT NULL COMMENT 'The total number of sorts that were done by scanning the table by the summarized statements.',
-  `SUM_NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT 'The total number of statements that performed a table scan without using an index.',
-  `SUM_NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT 'The total number of statements where no good index was found.'
+  `SUM_NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT 'The total number of statements that performed a table scan without using an index.ejs.',
+  `SUM_NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT 'The total number of statements where no good index.ejs was found.'
 ) ENGINE=PERFORMANCE_SCHEMA DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- Data exporting was unselected.
@@ -2850,7 +2850,7 @@ CREATE TABLE IF NOT EXISTS `events_waits_current` (
   `SPINS` int(10) unsigned DEFAULT NULL COMMENT 'Number of spin rounds for a mutex, or NULL if spin rounds are not used, or spinning is not instrumented.',
   `OBJECT_SCHEMA` varchar(64) DEFAULT NULL COMMENT 'Name of the schema that contains the table for table I/O objects, otherwise NULL for file I/O and synchronization objects.',
   `OBJECT_NAME` varchar(512) DEFAULT NULL COMMENT 'File name for file I/O objects, table name for table I/O objects, the socket''s IP:PORT value for a socket object or NULL for a synchronization object.',
-  `INDEX_NAME` varchar(64) DEFAULT NULL COMMENT 'Name of the index, PRIMARY for the primary key, or NULL for no index used.',
+  `INDEX_NAME` varchar(64) DEFAULT NULL COMMENT 'Name of the index.ejs, PRIMARY for the primary key, or NULL for no index.ejs used.',
   `OBJECT_TYPE` varchar(64) DEFAULT NULL COMMENT 'FILE for a file object, TABLE or TEMPORARY TABLE for a table object, or NULL for a synchronization object.',
   `OBJECT_INSTANCE_BEGIN` bigint(20) unsigned NOT NULL COMMENT 'Address in memory of the object.',
   `NESTING_EVENT_ID` bigint(20) unsigned DEFAULT NULL COMMENT 'EVENT_ID of event within which this event nests.',
@@ -2875,7 +2875,7 @@ CREATE TABLE IF NOT EXISTS `events_waits_history` (
   `SPINS` int(10) unsigned DEFAULT NULL COMMENT 'Number of spin rounds for a mutex, or NULL if spin rounds are not used, or spinning is not instrumented.',
   `OBJECT_SCHEMA` varchar(64) DEFAULT NULL COMMENT 'Name of the schema that contains the table for table I/O objects, otherwise NULL for file I/O and synchronization objects.',
   `OBJECT_NAME` varchar(512) DEFAULT NULL COMMENT 'File name for file I/O objects, table name for table I/O objects, the socket''s IP:PORT value for a socket object or NULL for a synchronization object.',
-  `INDEX_NAME` varchar(64) DEFAULT NULL COMMENT 'Name of the index, PRIMARY for the primary key, or NULL for no index used.',
+  `INDEX_NAME` varchar(64) DEFAULT NULL COMMENT 'Name of the index.ejs, PRIMARY for the primary key, or NULL for no index.ejs used.',
   `OBJECT_TYPE` varchar(64) DEFAULT NULL COMMENT 'FILE for a file object, TABLE or TEMPORARY TABLE for a table object, or NULL for a synchronization object.',
   `OBJECT_INSTANCE_BEGIN` bigint(20) unsigned NOT NULL COMMENT 'Address in memory of the object.',
   `NESTING_EVENT_ID` bigint(20) unsigned DEFAULT NULL COMMENT 'EVENT_ID of event within which this event nests.',
@@ -2900,7 +2900,7 @@ CREATE TABLE IF NOT EXISTS `events_waits_history_long` (
   `SPINS` int(10) unsigned DEFAULT NULL COMMENT 'Number of spin rounds for a mutex, or NULL if spin rounds are not used, or spinning is not instrumented.',
   `OBJECT_SCHEMA` varchar(64) DEFAULT NULL COMMENT 'Name of the schema that contains the table for table I/O objects, otherwise NULL for file I/O and synchronization objects.',
   `OBJECT_NAME` varchar(512) DEFAULT NULL COMMENT 'File name for file I/O objects, table name for table I/O objects, the socket''s IP:PORT value for a socket object or NULL for a synchronization object.',
-  `INDEX_NAME` varchar(64) DEFAULT NULL COMMENT 'Name of the index, PRIMARY for the primary key, or NULL for no index used.',
+  `INDEX_NAME` varchar(64) DEFAULT NULL COMMENT 'Name of the index.ejs, PRIMARY for the primary key, or NULL for no index.ejs used.',
   `OBJECT_TYPE` varchar(64) DEFAULT NULL COMMENT 'FILE for a file object, TABLE or TEMPORARY TABLE for a table object, or NULL for a synchronization object.',
   `OBJECT_INSTANCE_BEGIN` bigint(20) unsigned NOT NULL COMMENT 'Address in memory of the object.',
   `NESTING_EVENT_ID` bigint(20) unsigned DEFAULT NULL COMMENT 'EVENT_ID of event within which this event nests.',
@@ -3285,8 +3285,8 @@ CREATE TABLE IF NOT EXISTS `prepared_statements_instances` (
   `SUM_SORT_RANGE` bigint(20) unsigned NOT NULL COMMENT 'The total number of sorts that were done using ranges for the prepared statements.',
   `SUM_SORT_ROWS` bigint(20) unsigned NOT NULL COMMENT 'The total number of sorted rows that were sorted by the prepared statements.',
   `SUM_SORT_SCAN` bigint(20) unsigned NOT NULL COMMENT 'The total number of sorts that were done by scanning the table by the prepared statements.',
-  `SUM_NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT 'The total number of statements that performed a table scan without using an index.',
-  `SUM_NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT 'The total number of statements where no good index was found.'
+  `SUM_NO_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT 'The total number of statements that performed a table scan without using an index.ejs.',
+  `SUM_NO_GOOD_INDEX_USED` bigint(20) unsigned NOT NULL COMMENT 'The total number of statements where no good index.ejs was found.'
 ) ENGINE=PERFORMANCE_SCHEMA DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- Data exporting was unselected.
@@ -3577,7 +3577,7 @@ CREATE TABLE IF NOT EXISTS `table_io_waits_summary_by_index_usage` (
   `OBJECT_TYPE` varchar(64) DEFAULT NULL COMMENT 'TABLE in the case of all indexes.',
   `OBJECT_SCHEMA` varchar(64) DEFAULT NULL COMMENT 'Schema name.',
   `OBJECT_NAME` varchar(64) DEFAULT NULL COMMENT 'Table name.',
-  `INDEX_NAME` varchar(64) DEFAULT NULL COMMENT 'Index name, or PRIMARY for the primary index, NULL for no index (inserts are counted in this case).',
+  `INDEX_NAME` varchar(64) DEFAULT NULL COMMENT 'Index name, or PRIMARY for the primary index.ejs, NULL for no index.ejs (inserts are counted in this case).',
   `COUNT_STAR` bigint(20) unsigned NOT NULL COMMENT 'Number of summarized events and the sum of the x_READ and x_WRITE columns.',
   `SUM_TIMER_WAIT` bigint(20) unsigned NOT NULL COMMENT 'Total wait time of the summarized events that are timed.',
   `MIN_TIMER_WAIT` bigint(20) unsigned NOT NULL COMMENT 'Minimum wait time of the summarized events that are timed.',
@@ -6091,8 +6091,8 @@ BEGIN
                          'sort rows: ', sort_rows, '\\n',
                          'sort range: ', sort_range, '\\n',
                          'sort scan: ', sort_scan, '\\n',
-                         'no index used: ', IF(no_index_used, 'TRUE', 'FALSE'), '\\n',
-                         'no good index used: ', IF(no_good_index_used, 'TRUE', 'FALSE'), '\\n'
+                         'no index.ejs used: ', IF(no_index_used, 'TRUE', 'FALSE'), '\\n',
+                         'no good index.ejs used: ', IF(no_good_index_used, 'TRUE', 'FALSE'), '\\n'
                          ) AS wait_info
              FROM performance_schema.events_statements_history_long WHERE thread_id = thd_id)
           UNION
@@ -6457,8 +6457,8 @@ BEGIN
                             'sort rows: ', sort_rows, '\\n',
                             'sort range: ', sort_range, '\\n',
                             'sort scan: ', sort_scan, '\\n',
-                            'no index used: ', IF(no_index_used, 'TRUE', 'FALSE'), '\\n',
-                            'no good index used: ', IF(no_good_index_used, 'TRUE', 'FALSE'), '\\n'
+                            'no index.ejs used: ', IF(no_index_used, 'TRUE', 'FALSE'), '\\n',
+                            'no good index.ejs used: ', IF(no_good_index_used, 'TRUE', 'FALSE'), '\\n'
                      ) AS wait_info
                 FROM performance_schema.events_statements_history_long
                WHERE thread_id = in_thread_id AND event_id > v_min_event_id)
@@ -6634,7 +6634,7 @@ CREATE TABLE `schema_auto_increment_columns` (
 CREATE TABLE `schema_index_statistics` (
 	`table_schema` VARCHAR(1) NULL COMMENT 'Schema name.' COLLATE 'utf8mb3_general_ci',
 	`table_name` VARCHAR(1) NULL COMMENT 'Table name.' COLLATE 'utf8mb3_general_ci',
-	`index_name` VARCHAR(1) NULL COMMENT 'Index name, or PRIMARY for the primary index, NULL for no index (inserts are counted in this case).' COLLATE 'utf8mb3_general_ci',
+	`index_name` VARCHAR(1) NULL COMMENT 'Index name, or PRIMARY for the primary index.ejs, NULL for no index.ejs (inserts are counted in this case).' COLLATE 'utf8mb3_general_ci',
 	`rows_selected` BIGINT(20) UNSIGNED NOT NULL COMMENT 'Number of all fetch operations.',
 	`select_latency` VARCHAR(1) NOT NULL COLLATE 'utf8mb4_general_ci',
 	`rows_inserted` BIGINT(20) UNSIGNED NOT NULL COMMENT 'Number of all insert operations.',
@@ -6759,7 +6759,7 @@ CREATE TABLE `schema_table_statistics_with_buffer` (
 CREATE TABLE `schema_unused_indexes` (
 	`object_schema` VARCHAR(1) NULL COMMENT 'Schema name.' COLLATE 'utf8mb3_general_ci',
 	`object_name` VARCHAR(1) NULL COMMENT 'Table name.' COLLATE 'utf8mb3_general_ci',
-	`index_name` VARCHAR(1) NULL COMMENT 'Index name, or PRIMARY for the primary index, NULL for no index (inserts are counted in this case).' COLLATE 'utf8mb3_general_ci'
+	`index_name` VARCHAR(1) NULL COMMENT 'Index name, or PRIMARY for the primary index.ejs, NULL for no index.ejs (inserts are counted in this case).' COLLATE 'utf8mb3_general_ci'
 ) ENGINE=MyISAM;
 
 -- Dumping structure for view sys.session
@@ -7922,7 +7922,7 @@ CREATE TABLE `x$schema_flattened_keys` (
 CREATE TABLE `x$schema_index_statistics` (
 	`table_schema` VARCHAR(1) NULL COMMENT 'Schema name.' COLLATE 'utf8mb3_general_ci',
 	`table_name` VARCHAR(1) NULL COMMENT 'Table name.' COLLATE 'utf8mb3_general_ci',
-	`index_name` VARCHAR(1) NULL COMMENT 'Index name, or PRIMARY for the primary index, NULL for no index (inserts are counted in this case).' COLLATE 'utf8mb3_general_ci',
+	`index_name` VARCHAR(1) NULL COMMENT 'Index name, or PRIMARY for the primary index.ejs, NULL for no index.ejs (inserts are counted in this case).' COLLATE 'utf8mb3_general_ci',
 	`rows_selected` BIGINT(20) UNSIGNED NOT NULL COMMENT 'Number of all fetch operations.',
 	`select_latency` BIGINT(20) UNSIGNED NOT NULL COMMENT 'Total wait time of all fetch operations that are timed.',
 	`rows_inserted` BIGINT(20) UNSIGNED NOT NULL COMMENT 'Number of all insert operations.',

@@ -1,0 +1,29 @@
+<div class="container mt-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 40rem;">
+        <div class="card-header">
+            <h1 class="card-title h3 mb-0"><%= member.name %></h1>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Member ID:</dt>
+                <dd class="col-sm-9"><%= member.id %></dd>
+
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9"><%= member.email %></dd>
+
+                <dt class="col-sm-3">Role:</dt>
+                <dd class="col-sm-9"><%= member.role || 'N/A' %></dd>
+
+                <dt class="col-sm-3">Company ID:</dt>
+                <dd class="col-sm-9"><%= member.company_id %></dd>
+
+                <dt class="col-sm-3">Join Date:</dt>
+                <dd class="col-sm-9"><%= member.join_date ? new Date(member.join_date).toLocaleDateString() : 'N/A' %></dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a href="/members" class="btn btn-secondary me-2">Back to Members</a>
+            <a href="/members/edit/<%= member.id %>" class="btn btn-primary">Edit Member</a>
+        </div>
+    </div>
+</div>
