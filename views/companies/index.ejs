@@ -1,0 +1,43 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4">Companies</h1>
+        <a href="/companies/new" class="btn btn-primary">Add New Company</a>
+    </div>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <div class="alert <%= message.type === 'success' ? 'alert-success' : 'alert-danger' %> alert-dismissible fade show" role="alert">
+            <%= message.text %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <% if (companies && companies.length > 0) { %>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <% companies.forEach(company => { %>
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= company.name %></h5>
+                            <p class="card-text"><strong>Industry:</strong> <%= company.industry%></p>
+                            <p class="card-text mb-3"><strong>Location:</strong> <%= company.location %></p>
+                            <div class="d-flex justify-content-end">
+                                <a href="/companies/<%= company.id %>" class="btn btn-outline-secondary btn-sm me-2">View</a>
+                                <a href="/companies/edit/<%= company.id %>" class="btn btn-outline-primary btn-sm me-2">Edit</a>
+                                <form action="/companies/delete/<%= company.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this company?');" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <div class="text-center py-5">
+            <div class="card p-4 shadow-sm mx-auto" style="max-width: 25rem;">
+                <p class="lead text-muted">No companies found.</p>
+                <p class="mt-2">Why not <a href="/companies/new">add one</a>?</p>
+            </div>
+        </div>
+    <% } %>
+</div>
