@@ -3,22 +3,25 @@ const router = express.Router();
 const CompanyController = require('../controllers/companyController');
 const { validateCompany, validateCompanyId } = require('../validators/company.dto');
 
-// Get all companies
+// List all companies (GUI)
 router.get('/', CompanyController.getCompanies);
 
-// Get company by name
-router.get('/name/:name', CompanyController.getCompanybyName);
+// Render form to create a new company
+router.get('/new', CompanyController.renderNewForm);
 
-// Get company details by ID
-router.get('/:CompanyID', validateCompanyId, CompanyController.getCompanyDetails);
+// Show a single company (GUI)
+router.get('/:CompanyID', CompanyController.showCompany);
 
-// Create a new company
-router.post('/', validateCompany, CompanyController.createCompany);
+// Render form to edit a company
+router.get('/edit/:CompanyID', CompanyController.renderEditForm);
 
-// Update a company
-router.put('/:CompanyID', validateCompany, validateCompanyId, CompanyController.updateCompany);
+// Create a new company (form POST)
+router.post('/', CompanyController.createCompany);
 
-// Delete a company
-router.delete('/:CompanyID', validateCompanyId, CompanyController.deleteCompany);
+// Update a company (form PUT)
+router.put('/edit/:CompanyID', CompanyController.updateCompany);
+
+// Delete a company (form DELETE)
+router.delete('/delete/:CompanyID', CompanyController.deleteCompany);
 
 module.exports = router;
