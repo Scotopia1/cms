@@ -6,15 +6,6 @@ const { validateCompany, validateCompanyId } = require('../validators/company.dt
 // List all companies (GUI)
 router.get('/', CompanyController.getCompanies);
 
-// Render form to create a new company
-router.get('/new', CompanyController.renderNewForm);
-
-// Show a single company (GUI)
-router.get('/:CompanyID', CompanyController.showCompany);
-
-// Render form to edit a company
-router.get('/edit/:CompanyID', CompanyController.renderEditForm);
-
 // Create a new company (form POST)
 router.post('/', CompanyController.createCompany);
 
