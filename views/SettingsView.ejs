@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - CMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .settings-card {
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .settings-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+        }
+        .tab-button {
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .tab-button.active {
+            border-color: #4f46e5; /* Indigo-600 */
+            color: #4f46e5;
+            background-color: #eef2ff; /* Indigo-50 */
+        }
+        .tab-button:not(.active):hover {
+            background-color: #f3f4f6; /* Gray-100 */
+            border-color: #d1d5db; /* Gray-300 */
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Toggle Switch (for Notifications tab - UI only) */
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+            background-color: #4f46e5; /* Indigo-600 */
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #c7d2fe; /* Indigo-200 */
+        }
+        .loading-spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .message-area {
+            padding: 0.75rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        .message-success {
+            background-color: #d1fae5; color: #065f46; border: 1px solid #34d399;
+        }
+        .message-error {
+            background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-6 lg:p-8">
+<div class="container mx-auto">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Settings</h1>
+        <p class="text-gray-600">Manage your account preferences and application settings.</p>
+    </header>
+
+    <div id="globalMessage" class="message-area hidden"></div>
+
+    <div class="flex flex-col md:flex-row gap-8">
+        <aside class="md:w-1/4">
+            <nav class="bg-white rounded-lg shadow-md p-4">
+                <ul class="space-y-2">
+                    <li><button data-tab="profile" class="tab-button w-full text-left px-4 py-2.5 rounded-md font-medium text-gray-700 border-l-4 border-transparent active"><i class="fas fa-user-circle w-6 mr-2"></i>Profile</button></li>
+                    <li><button data-tab="security" class="tab-button w-full text-left px-4 py-2.5 rounded-md font-medium text-gray-700 border-l-4 border-transparent"><i class="fas fa-shield-alt w-6 mr-2"></i>Security</button></li>
+                    <li><button data-tab="notifications" class="tab-button w-full text-left px-4 py-2.5 rounded-md font-medium text-gray-700 border-l-4 border-transparent"><i class="fas fa-bell w-6 mr-2"></i>Notifications</button></li>
+                    <li><button data-tab="appearance" class="tab-button w-full text-left px-4 py-2.5 rounded-md font-medium text-gray-700 border-l-4 border-transparent"><i class="fas fa-palette w-6 mr-2"></i>Appearance</button></li>
+                    <li><button data-tab="integrations" class="tab-button w-full text-left px-4 py-2.5 rounded-md font-medium text-gray-700 border-l-4 border-transparent"><i class="fas fa-puzzle-piece w-6 mr-2"></i>Integrations</button></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="md:w-3/4">
+            <div id="profileContent" class="tab-content active">
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl settings-card">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">Profile Settings</h2>
+                    <div id="profileLoadingIndicator" class="loading-spinner-container hidden"><div class="loading-spinner"></div></div>
+                    <form id="profileForm" class="space-y-6 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="profileName" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+                                <input type="text" id="profileName" name="Name" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                            </div>
+                            <div>
+                                <label for="profileEmail" class="block text-sm font-medium text-gray-700 mb-1">Email Address <span class="text-red-500">*</span></label>
+                                <input type="email" id="profileEmail" name="Email" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="profilePosition" class="block text-sm font-medium text-gray-700 mb-1">Position <span class="text-red-500">*</span></label>
+                            <input type="text" id="profilePosition" name="Position" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-700">Company ID: <span id="profileCompanyID" class="font-medium"></span> (Not editable)</p>
+                        </div>
+                        <div id="profileFormMessage" class="message-area hidden"></div>
+                        <div class="flex justify-end pt-2">
+                            <button type="submit" id="saveProfileBtn" class="px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition-colors">
+                                <span id="saveProfileBtnText">Save Profile</span>
+                                <i id="saveProfileBtnSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="securityContent" class="tab-content">
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl settings-card">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">Security</h2>
+                    <form id="passwordChangeForm" class="space-y-6">
+                        <h3 class="text-lg font-medium text-gray-700">Change Password</h3>
+                        <div>
+                            <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">Current Password <span class="text-red-500">*</span></label>
+                            <input type="password" id="currentPassword" name="currentPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        </div>
+                        <div>
+                            <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">New Password <span class="text-red-500">*</span></label>
+                            <input type="password" id="newPassword" name="newPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        </div>
+                        <div>
+                            <label for="confirmNewPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password <span class="text-red-500">*</span></label>
+                            <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        </div>
+                        <div id="passwordFormMessage" class="message-area hidden"></div>
+                        <div class="flex justify-end pt-2">
+                            <button type="submit" id="changePasswordBtn" class="px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition-colors">
+                                <span id="changePasswordBtnText">Update Password</span>
+                                <i id="changePasswordBtnSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="mt-8 pt-6 border-t">
+                        <h3 class="text-lg font-medium text-gray-700 mb-2">Two-Factor Authentication (2FA)</h3>
+                        <p class="text-sm text-gray-600 mb-3">Enhance your account security by enabling 2FA.</p>
+                        <button type="button" id="enable2FABtn" class="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm">Enable 2FA</button>
+                        <p id="2faStatus" class="text-xs text-gray-500 mt-1">Status: Not enabled. (UI Example)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="notificationsContent" class="tab-content">
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl settings-card">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">Notification Settings</h2>
+                    <form class="space-y-6">
+                        <p class="text-gray-700 mb-2 font-medium">Email Notifications:</p>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                <span>New Task Assignments</span>
+                                <div class="relative inline-block w-10 align-middle select-none">
+                                    <input type="checkbox" name="emailNewTask" id="emailNewTask" class="toggle-checkbox absolute opacity-0 w-0 h-0" checked/>
+                                    <span class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer">
+                                            <span class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-100 ease-linear"></span>
+                                        </span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="flex justify-end pt-2">
+                            <button type="button" class="px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition-colors opacity-50 cursor-not-allowed">Save Notifications (UI)</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="appearanceContent" class="tab-content">
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl settings-card">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">Appearance</h2>
+                    <form class="space-y-6">
+                        <div>
+                            <label for="themeSelect" class="block text-sm font-medium text-gray-700 mb-1">Theme</label>
+                            <select id="themeSelect" name="themeSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="light">Light Mode</option>
+                                <option value="dark">Dark Mode (UI Only)</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="button" class="px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition-colors opacity-50 cursor-not-allowed">Save Appearance (UI)</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="integrationsContent" class="tab-content">
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl settings-card">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">Integrations</h2>
+                    <p class="text-gray-600">Manage connections to other services (UI Example).</p>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = '/api';
+
+    // DOM Elements
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const globalMessage = document.getElementById('globalMessage');
+
+    // Profile Tab Elements
+    const profileForm = document.getElementById('profileForm');
+    const profileLoadingIndicator = document.getElementById('profileLoadingIndicator');
+    const profileFormMessage = document.getElementById('profileFormMessage');
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    const saveProfileBtnText = document.getElementById('saveProfileBtnText');
+    const saveProfileBtnSpinner = document.getElementById('saveProfileBtnSpinner');
+    const passwordRequiredIndicatorModal = document.getElementById('passwordRequiredIndicator');
+
+
+    // Security Tab Elements
+    const passwordChangeForm = document.getElementById('passwordChangeForm');
+    const passwordFormMessage = document.getElementById('passwordFormMessage');
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+    const changePasswordBtnText = document.getElementById('changePasswordBtnText');
+    const changePasswordBtnSpinner = document.getElementById('changePasswordBtnSpinner');
+
+
+    let currentMemberData = null; // To store fetched member data
+
+    // --- Authentication Placeholder ---
+    function getAuthToken() {
+        // return localStorage.getItem('authToken');
+        return 'dummy-auth-token-member123'; // Placeholder
+    }
+    function getMemberIdFromSession() {
+        // In a real app, this would come from the decoded token or session
+        // const userData = JSON.parse(localStorage.getItem('userData'));
+        // return userData ? userData.memberId : null;
+        return 1; // Placeholder: Assuming logged-in member has ID 1
+    }
+
+    // --- Utility Functions ---
+    function showGlobalMessage(message, type = 'error') {
+        globalMessage.textContent = message;
+        globalMessage.className = `message-area ${type === 'success' ? 'message-success' : 'message-error'}`;
+        globalMessage.classList.remove('hidden');
+        setTimeout(() => globalMessage.classList.add('hidden'), 5000);
+    }
+    function showProfileFormMessage(message, type = 'error') {
+        profileFormMessage.textContent = message;
+        profileFormMessage.className = `message-area ${type === 'success' ? 'message-success' : 'message-error'}`;
+        profileFormMessage.classList.remove('hidden');
+    }
+    function showPasswordFormMessage(message, type = 'error') {
+        passwordFormMessage.textContent = message;
+        passwordFormMessage.className = `message-area ${type === 'success' ? 'message-success' : 'message-error'}`;
+        passwordFormMessage.classList.remove('hidden');
+    }
+
+
+    // Tab Navigation
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            button.classList.add('active');
+            const targetTab = button.dataset.tab;
+            document.getElementById(`${targetTab}Content`).classList.add('active');
+            if (targetTab === 'profile' && !currentMemberData) { // Fetch profile data if not already loaded
+                fetchMemberProfile();
+            }
+        });
+    });
+
+    // --- Profile Settings ---
+    async function fetchMemberProfile() {
+        const memberId = getMemberIdFromSession();
+        if (!memberId) {
+            showGlobalMessage('Could not identify user. Please login again.');
+            return;
+        }
+
+        profileLoadingIndicator.classList.remove('hidden');
+        profileForm.classList.add('hidden');
+        profileFormMessage.classList.add('hidden');
+
+        try {
+            const token = getAuthToken();
+            // Assuming an endpoint like /api/members/:id or /api/auth/me
+            const response = await fetch(`${API_BASE_URL}/members/${memberId}`, { // Or /api/auth/me
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
+                throw new Error(errorData.message || `Failed to fetch profile. Status: ${response.status}`);
+            }
+            const data = await response.json();
+            currentMemberData = data.member || data; // Adapt to your API response structure
+
+            // Populate form (MemberID, Name, Email, Position, CompanyID)
+            document.getElementById('profileName').value = currentMemberData.Name || '';
+            document.getElementById('profileEmail').value = currentMemberData.Email || '';
+            document.getElementById('profilePosition').value = currentMemberData.Position || '';
+            document.getElementById('profileCompanyID').textContent = currentMemberData.CompanyID || 'N/A';
+
+            profileForm.classList.remove('hidden');
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+            showProfileFormMessage(`Error fetching profile: ${error.message}`);
+        } finally {
+            profileLoadingIndicator.classList.add('hidden');
+        }
+    }
+
+    profileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        saveProfileBtnText.textContent = 'Saving...';
+        saveProfileBtnSpinner.classList.remove('hidden');
+        saveProfileBtn.disabled = true;
+        profileFormMessage.classList.add('hidden');
+
+        const memberId = getMemberIdFromSession();
+        if (!memberId) {
+            showProfileFormMessage('User session error. Cannot save profile.');
+            saveProfileBtnText.textContent = 'Save Profile';
+            saveProfileBtnSpinner.classList.add('hidden');
+            saveProfileBtn.disabled = false;
+            return;
+        }
+
+        const updatedProfileData = {
+            Name: document.getElementById('profileName').value,
+            Email: document.getElementById('profileEmail').value,
+            Position: document.getElementById('profilePosition').value
+            // CompanyID is not typically updated by the user themselves here.
+        };
+
+        try {
+            const token = getAuthToken();
+            const response = await fetch(`${API_BASE_URL}/members/${memberId}`, { // Your PUT endpoint for member update
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updatedProfileData)
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || 'Failed to update profile.');
+            }
+            showProfileFormMessage('Profile updated successfully!', 'success');
+            currentMemberData = { ...currentMemberData, ...updatedProfileData }; // Update local cache
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            showProfileFormMessage(`Error: ${error.message}`);
+        } finally {
+            saveProfileBtnText.textContent = 'Save Profile';
+            saveProfileBtnSpinner.classList.add('hidden');
+            saveProfileBtn.disabled = false;
+        }
+    });
+
+    // --- Security Settings (Password Change) ---
+    passwordChangeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        changePasswordBtnText.textContent = 'Updating...';
+        changePasswordBtnSpinner.classList.remove('hidden');
+        changePasswordBtn.disabled = true;
+        passwordFormMessage.classList.add('hidden');
+
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+        if (newPassword !== confirmNewPassword) {
+            showPasswordFormMessage('New passwords do not match.');
+            changePasswordBtnText.textContent = 'Update Password';
+            changePasswordBtnSpinner.classList.add('hidden');
+            changePasswordBtn.disabled = false;
+            return;
+        }
+        if (newPassword.length < 6) { // Example: Basic validation
+            showPasswordFormMessage('New password must be at least 6 characters.');
+            changePasswordBtnText.textContent = 'Update Password';
+            changePasswordBtnSpinner.classList.add('hidden');
+            changePasswordBtn.disabled = false;
+            return;
+        }
+
+
+        try {
+            const token = getAuthToken();
+            // This endpoint would typically expect currentPassword and newPassword
+            const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+                method: 'POST', // Or PUT, depending on your API design
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ currentPassword, newPassword })
+            });
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Failed to change password.');
+            }
+            showPasswordFormMessage('Password changed successfully!', 'success');
+            passwordChangeForm.reset();
+        } catch (error) {
+            console.error('Error changing password:', error);
+            showPasswordFormMessage(`Error: ${error.message}`);
+        } finally {
+            changePasswordBtnText.textContent = 'Update Password';
+            changePasswordBtnSpinner.classList.add('hidden');
+            changePasswordBtn.disabled = false;
+        }
+    });
+
+    document.getElementById('enable2FABtn')?.addEventListener('click', () => {
+        alert('2FA setup flow would start here. This is a UI example and not connected to backend.');
+    });
+
+    // --- Initial Load for Profile Tab ---
+    // if (!getAuthToken()) { window.location.href = '/login.html'; }
+    // else {
+    fetchMemberProfile(); // Fetch profile data when the page loads (if profile tab is active by default)
+    // }
+</script>
+</body>
+</html>

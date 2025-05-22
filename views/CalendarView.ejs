@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar View - CMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .calendar-day {
+            min-height: 120px; /* Ensure days have enough height */
+            transition: background-color 0.2s;
+        }
+        .calendar-day:hover {
+            background-color: #f9fafb; /* Light gray on hover */
+        }
+        .today {
+            background-color: #eff6ff; /* Light blue for today */
+            border: 1px solid #93c5fd; /* Blue border for today */
+        }
+        .today .day-number-text {
+            background-color: #3b82f6; /* Blue-500 */
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .other-month .day-number-text {
+            color: #9ca3af; /* Gray-400 for other month days */
+        }
+        .event {
+            font-size: 0.75rem; /* 12px */
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-bottom: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+            border-left-width: 3px;
+        }
+        /* Task Event Styles (based on task status) */
+        .event-task-pending {
+            background-color: #fef9c3; /* Yellow-100 */
+            color: #854d0e; /* Yellow-700 */
+            border-left-color: #facc15; /* Yellow-400 */
+        }
+        .event-task-in-progress {
+            background-color: #dbeafe; /* Blue-100 */
+            color: #1e40af; /* Blue-800 */
+            border-left-color: #60a5fa; /* Blue-400 */
+        }
+        .event-task-completed {
+            background-color: #d1fae5; /* Green-100 */
+            color: #065f46; /* Green-700 */
+            border-left-color: #34d399; /* Green-400 */
+            text-decoration: line-through;
+        }
+        /* Project Deadline Event Styles (based on project status) */
+        .event-project-pending {
+            background-color: #ffedd5; /* Orange-100 */
+            color: #9a3412; /* Orange-700 */
+            border-left-color: #fb923c; /* Orange-400 */
+        }
+        .event-project-in-progress {
+            background-color: #e0e7ff; /* Indigo-100 */
+            color: #3730a3; /* Indigo-800 */
+            border-left-color: #818cf8; /* Indigo-400 */
+        }
+        .event-project-completed {
+            background-color: #e5e7eb; /* Gray-200 */
+            color: #4b5563; /* Gray-600 */
+            border-left-color: #9ca3af; /* Gray-400 */
+            text-decoration: line-through;
+        }
+
+        /* Modal styles */
+        .modal-bg-enter { transition: opacity 0.3s ease-out; }
+        .modal-bg-enter-from { opacity: 0; }
+        .modal-bg-enter-to { opacity: 1; }
+        .modal-bg-leave { transition: opacity 0.2s ease-in; }
+        .modal-bg-leave-from { opacity: 1; }
+        .modal-bg-leave-to { opacity: 0; }
+
+        .modal-panel-enter { transition: all 0.3s ease-out; }
+        .modal-panel-enter-from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+        .modal-panel-enter-to { opacity: 1; transform: translateY(0) scale(1); }
+        .modal-panel-leave { transition: all 0.2s ease-in; }
+        .modal-panel-leave-from { opacity: 1; transform: translateY(0) scale(1); }
+        .modal-panel-leave-to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+
+        .loading-spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px; /* Ensure spinner is visible */
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .message-area {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        .message-success {
+            background-color: #d1fae5; color: #065f46; border: 1px solid #34d399;
+        }
+        .message-error {
+            background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-6 lg:p-8">
+<div class="container mx-auto">
+    <header class="mb-8 text-center sm:text-left">
+        <h1 class="text-3xl font-bold text-gray-800">Calendar View</h1>
+        <p class="text-gray-600">Visualize your project and task deadlines.</p>
+    </header>
+
+    <div id="globalMessage" class="message-area hidden"></div>
+
+    <div class="mb-6 p-4 bg-white rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-2">
+            <button id="prevMonthBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <h2 id="currentMonthYear" class="text-xl font-semibold text-gray-700 w-40 text-center"></h2>
+            <button id="nextMonthBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        <button id="todayBtn" class="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition-colors">
+            Today
+        </button>
+    </div>
+
+    <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+        <div id="calendarGridHeader" class="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
+        </div>
+        <div id="loadingIndicator" class="loading-spinner-container hidden"><div class="loading-spinner"></div></div>
+        <div id="calendarGrid" class="grid grid-cols-7">
+        </div>
+    </div>
+</div>
+
+<div id="eventModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 overflow-y-auto h-full w-full flex items-center justify-center hidden px-4 modal-bg-enter-from" data-transition-state="closed">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-md transform transition-all modal-panel-enter-from">
+        <div class="flex justify-between items-center mb-4">
+            <h2 id="eventModalTitle" class="text-xl font-semibold text-gray-800">Event Details</h2>
+            <button id="closeEventModalBtn" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+        <div id="eventModalBody" class="text-sm text-gray-700 space-y-2">
+        </div>
+        <div class="mt-6 flex justify-end">
+            <button id="okEventModalBtn" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md transition-colors">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = '/api';
+
+    // DOM Elements
+    const calendarGrid = document.getElementById('calendarGrid');
+    const calendarGridHeader = document.getElementById('calendarGridHeader');
+    const currentMonthYearDisplay = document.getElementById('currentMonthYear');
+    const prevMonthBtn = document.getElementById('prevMonthBtn');
+    const nextMonthBtn = document.getElementById('nextMonthBtn');
+    const todayBtn = document.getElementById('todayBtn');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const globalMessage = document.getElementById('globalMessage');
+
+    const eventModal = document.getElementById('eventModal');
+    const eventModalTitle = document.getElementById('eventModalTitle');
+    const eventModalBody = document.getElementById('eventModalBody');
+    const closeEventModalBtn = document.getElementById('closeEventModalBtn');
+    const okEventModalBtn = document.getElementById('okEventModalBtn');
+
+    let currentDate = new Date();
+    let tasksCache = [];
+    let projectsCache = []; // For project names and their EndDate
+
+    // --- Auth Placeholder ---
+    function getAuthToken() {
+        // return localStorage.getItem('authToken');
+        return 'dummy-auth-token'; // Placeholder
+    }
+
+    // --- Utility Functions ---
+    function showGlobalMessage(message, type = 'error') {
+        globalMessage.textContent = message;
+        globalMessage.className = `message-area ${type === 'success' ? 'message-success' : 'message-error'}`;
+        globalMessage.classList.remove('hidden');
+        setTimeout(() => globalMessage.classList.add('hidden'), 5000);
+    }
+
+    function formatDateForDisplay(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'Invalid Date';
+        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function getProjectName(projectId) {
+        const project = projectsCache.find(p => p.ProjectID == projectId);
+        return project ? project.Name : `Project ID ${projectId}`;
+    }
+
+    function getEventStyle(event) {
+        if (event.type === 'task') {
+            if (event.Status === 'Completed') return 'event-task-completed';
+            if (event.Status === 'In Progress') return 'event-task-in-progress';
+            return 'event-task-pending'; // Default to pending for tasks
+        } else if (event.type === 'project') {
+            if (event.Status === 'Completed') return 'event-project-completed';
+            if (event.Status === 'In Progress') return 'event-project-in-progress';
+            return 'event-project-pending'; // Default to pending for projects
+        }
+        return '';
+    }
+
+
+    // --- API Interaction ---
+    async function fetchDataForCalendar(year, month) {
+        loadingIndicator.classList.remove('hidden');
+        calendarGrid.classList.add('hidden'); // Hide grid while loading
+
+        const token = getAuthToken();
+        const headers = { 'Authorization': `Bearer ${token}` };
+
+        // Fetch tasks (can be filtered by month on backend if API supports it)
+        // For now, fetching all tasks and filtering client-side
+        const fetchTasksPromise = fetch(`${API_BASE_URL}/tasks`, { headers })
+            .then(res => {
+                if (!res.ok) throw new Error(`Failed to fetch tasks. Status: ${res.status}`);
+                return res.json();
+            })
+            .then(data => data.tasks || data);
+
+        // Fetch projects (for names and EndDate)
+        const fetchProjectsPromise = fetch(`${API_BASE_URL}/projects`, { headers })
+            .then(res => {
+                if (!res.ok) throw new Error(`Failed to fetch projects. Status: ${res.status}`);
+                return res.json();
+            })
+            .then(data => data.projects || data);
+
+        try {
+            [tasksCache, projectsCache] = await Promise.all([fetchTasksPromise, fetchProjectsPromise]);
+            renderCalendar();
+        } catch (error) {
+            console.error('Error fetching calendar data:', error);
+            showGlobalMessage(`Error loading calendar data: ${error.message}`);
+            tasksCache = [];
+            projectsCache = [];
+            renderCalendar(); // Attempt to render empty calendar
+        } finally {
+            loadingIndicator.classList.add('hidden');
+            calendarGrid.classList.remove('hidden');
+        }
+    }
+
+
+    function renderCalendar() {
+        calendarGrid.innerHTML = '';
+        calendarGridHeader.innerHTML = '';
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        currentMonthYearDisplay.textContent = `${currentDate.toLocaleDateString('en-US', { month: 'long' })} ${year}`;
+
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        daysOfWeek.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'p-3 text-center text-xs font-semibold text-gray-600 uppercase';
+            dayHeader.textContent = day;
+            calendarGridHeader.appendChild(dayHeader);
+        });
+
+        const firstDayOfMonth = new Date(year, month, 1);
+        const lastDayOfMonth = new Date(year, month + 1, 0);
+        const daysInMonth = lastDayOfMonth.getDate();
+        const startDayOfWeek = firstDayOfMonth.getDay();
+
+        const monthEvents = {};
+        // Process tasks for the current month view
+        tasksCache.forEach(task => {
+            if (task.Deadline) {
+                const eventDate = new Date(task.Deadline); // Deadline includes time
+                if (eventDate.getFullYear() === year && eventDate.getMonth() === month) {
+                    const day = eventDate.getDate();
+                    if (!monthEvents[day]) monthEvents[day] = [];
+                    monthEvents[day].push({
+                        type: 'task',
+                        id: task.TaskID,
+                        name: task.Title,
+                        description: task.Description,
+                        dueDate: task.Deadline,
+                        Status: task.Status, // Use Status from DB
+                        ProjectID: task.ProjectID,
+                        Priority: task.Priority
+                    });
+                }
+            }
+        });
+        // Process project deadlines for the current month view
+        projectsCache.forEach(project => {
+            if (project.EndDate) {
+                const eventDate = new Date(project.EndDate + 'T00:00:00'); // Treat as start of day
+                if (eventDate.getFullYear() === year && eventDate.getMonth() === month) {
+                    const day = eventDate.getDate();
+                    if (!monthEvents[day]) monthEvents[day] = [];
+                    monthEvents[day].push({
+                        type: 'project',
+                        id: project.ProjectID,
+                        name: `Deadline: ${project.Name}`,
+                        description: project.Description,
+                        dueDate: project.EndDate,
+                        Status: project.Status // Use Status from DB
+                    });
+                }
+            }
+        });
+
+        // Previous month's days
+        const prevMonthLastDay = new Date(year, month, 0);
+        const daysInPrevMonth = prevMonthLastDay.getDate();
+        for (let i = startDayOfWeek - 1; i >= 0; i--) {
+            const dayCell = document.createElement('div');
+            dayCell.className = 'calendar-day border border-gray-200 p-2 other-month';
+            const dayNumberText = document.createElement('span');
+            dayNumberText.className = 'day-number-text text-sm';
+            dayNumberText.textContent = daysInPrevMonth - i;
+            dayCell.appendChild(dayNumberText);
+            calendarGrid.appendChild(dayCell);
+        }
+
+        // Current month's days
+        const todayObj = new Date();
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayCell = document.createElement('div');
+            dayCell.className = 'calendar-day border border-gray-200 p-2 relative flex flex-col';
+
+            const dayNumberContainer = document.createElement('div');
+            dayNumberContainer.className = 'day-number-text text-sm font-medium text-gray-700 mb-1 self-start';
+            dayNumberContainer.textContent = day;
+            dayCell.appendChild(dayNumberContainer);
+
+            if (year === todayObj.getFullYear() && month === todayObj.getMonth() && day === todayObj.getDate()) {
+                dayCell.classList.add('today');
+            }
+
+            if (monthEvents[day]) {
+                const eventsContainer = document.createElement('div');
+                eventsContainer.className = 'flex-grow overflow-y-auto max-h-24 space-y-1 pr-1'; // Allow scroll, max-h-24
+                monthEvents[day].sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate)).forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.textContent = event.name;
+                    eventDiv.className = `event ${getEventStyle(event)}`;
+                    eventDiv.addEventListener('click', () => showEventDetails(event));
+                    eventsContainer.appendChild(eventDiv);
+                });
+                dayCell.appendChild(eventsContainer);
+            }
+            calendarGrid.appendChild(dayCell);
+        }
+
+        // Next month's days
+        const totalCells = startDayOfWeek + daysInMonth;
+        const remainingCells = (totalCells % 7 === 0) ? 0 : 7 - (totalCells % 7) ;
+        for (let i = 1; i <= remainingCells; i++) {
+            const dayCell = document.createElement('div');
+            dayCell.className = 'calendar-day border border-gray-200 p-2 other-month';
+            const dayNumberText = document.createElement('span');
+            dayNumberText.className = 'day-number-text text-sm';
+            dayNumberText.textContent = i;
+            dayCell.appendChild(dayNumberText);
+            calendarGrid.appendChild(dayCell);
+        }
+    }
+
+    function showEventDetails(event) {
+        eventModalTitle.textContent = `${event.type.charAt(0).toUpperCase() + event.type.slice(1)}: ${event.name}`;
+        let detailsHtml = `<p class="break-words"><strong>Description:</strong> ${event.description || 'N/A'}</p>`;
+        if (event.dueDate) {
+            detailsHtml += `<p><strong>${event.type === 'task' ? 'Deadline' : 'End Date'}:</strong> ${formatDateForDisplay(event.dueDate)}</p>`;
+        }
+        if (event.type === 'task') {
+            detailsHtml += `<p><strong>Project:</strong> ${getProjectName(event.ProjectID)}</p>`;
+            detailsHtml += `<p><strong>Priority:</strong> <span class="capitalize">${getPriorityText(event.Priority)}</span></p>`;
+        }
+        detailsHtml += `<p><strong>Status:</strong> <span class="capitalize">${event.Status}</span></p>`;
+
+        eventModalBody.innerHTML = detailsHtml;
+
+        eventModal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            eventModal.classList.remove('modal-bg-enter-from');
+            eventModal.querySelector('.modal-panel-enter-from').classList.remove('modal-panel-enter-from');
+            eventModal.dataset.transitionState = 'opened';
+        });
+    }
+
+    function closeEventModal() {
+        eventModal.dataset.transitionState = 'closing';
+        eventModal.classList.add('modal-bg-leave-to');
+        eventModal.querySelector('div > div').classList.add('modal-panel-leave-to');
+        setTimeout(() => {
+            eventModal.classList.add('hidden');
+            eventModal.classList.remove('modal-bg-leave-to', 'modal-bg-enter-from');
+            const panel = eventModal.querySelector('div > div');
+            panel.classList.remove('modal-panel-leave-to', 'modal-panel-enter-from');
+            eventModal.dataset.transitionState = 'closed';
+        }, 200);
+    }
+
+    prevMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        fetchDataForCalendar(currentDate.getFullYear(), currentDate.getMonth());
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        fetchDataForCalendar(currentDate.getFullYear(), currentDate.getMonth());
+    });
+
+    todayBtn.addEventListener('click', () => {
+        currentDate = new Date();
+        fetchDataForCalendar(currentDate.getFullYear(), currentDate.getMonth());
+    });
+
+    closeEventModalBtn.addEventListener('click', closeEventModal);
+    okEventModalBtn.addEventListener('click', closeEventModal);
+
+    // --- Initial Load ---
+    // if (!getAuthToken()) { window.location.href = '/login.html'; }
+    // else {
+    fetchDataForCalendar(currentDate.getFullYear(), currentDate.getMonth());
+    // }
+</script>
+</body>
+</html>

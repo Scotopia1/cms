@@ -21,7 +21,6 @@ app.use('/tasks', taskRoutes);
 app.use('/members', memberRoutes);
 app.use('/managers', managerRoutes);
 
-
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

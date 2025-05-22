@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Your Collaborative Project Management Solution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #93c5fd 100%);
+        }
+        .feature-card:hover, .feedback-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .cta-button {
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+        .nav-link {
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: #60a5fa; /* Tailwind blue-400 */
+        }
+        .section-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .feedback-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-gray-800 antialiased">
+
+<nav class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full z-50">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+        <a href="#" class="text-2xl font-bold text-indigo-600 flex items-center">
+            <i class="fas fa-tasks mr-2"></i>TaskFlow
+        </a>
+        <div class="hidden md:flex space-x-4 items-center">
+            <a href="#home" class="nav-link text-gray-700 font-medium">Home</a>
+            <a href="#features" class="nav-link text-gray-700 font-medium">Features</a>
+            <a href="#feedbacks" class="nav-link text-gray-700 font-medium">Feedbacks</a>
+            <a href="login.html" class="nav-link text-gray-700 font-medium">Login</a>
+            <a href="register-company.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition duration-150 cta-button">
+                Get Started
+            </a>
+        </div>
+        <div class="md:hidden">
+            <button id="mobileMenuBtn" class="text-gray-700 focus:outline-none">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white shadow-lg py-2">
+        <a href="#home" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Home</a>
+        <a href="#features" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Features</a>
+        <a href="#feedbacks" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Feedbacks</a>
+        <a href="login.html" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Login</a>
+        <a href="register-company.html" class="block mx-4 my-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-center font-medium hover:bg-indigo-700 transition duration-150">
+            Get Started
+        </a>
+    </div>
+</nav>
+
+<section id="home" class="hero-bg text-white pt-32 pb-20 md:pt-40 md:pb-28">
+    <div class="container mx-auto px-6 text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+            Streamline Your Workflow. Achieve More.
+        </h1>
+        <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto text-indigo-100">
+            TaskFlow is the intuitive and collaborative project management tool designed to boost your team's productivity and bring clarity to your projects.
+        </p>
+        <a href="register-company.html" class="bg-white text-indigo-700 font-semibold px-8 py-4 rounded-lg shadow-lg text-lg hover:bg-indigo-50 transition duration-150 cta-button">
+            Get Started for Free
+        </a>
+        <p class="text-sm mt-4 text-indigo-200">No credit card required.</p>
+    </div>
+</section>
+
+<section id="features" class="py-16 md:py-24 bg-slate-100">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12 md:mb-16 section-animate">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Why Choose TaskFlow?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Our platform offers a comprehensive suite of tools to manage projects of any scale, ensuring everyone stays on the same page.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-xl shadow-lg feature-card section-animate">
+                <div class="text-indigo-600 text-4xl mb-4"><i class="fas fa-tasks"></i></div>
+                <h3 class="text-xl font-semibold mb-2 text-gray-800">Task Organization</h3>
+                <p class="text-gray-600 text-sm">Easily create, assign, and prioritize tasks within projects. Keep track of every detail and deadline.</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg feature-card section-animate" style="transition-delay: 0.1s;">
+                <div class="text-indigo-600 text-4xl mb-4"><i class="fas fa-chart-line"></i></div>
+                <h3 class="text-xl font-semibold mb-2 text-gray-800">Progress Tracking</h3>
+                <p class="text-gray-600 text-sm">Monitor project timelines, individual workloads, and overall progress with intuitive visual dashboards.</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg feature-card section-animate" style="transition-delay: 0.2s;">
+                <div class="text-indigo-600 text-4xl mb-4"><i class="fas fa-users-cog"></i></div>
+                <h3 class="text-xl font-semibold mb-2 text-gray-800">Seamless Collaboration</h3>
+                <p class="text-gray-600 text-sm">Facilitate clear communication, file sharing, and real-time updates among team members, all in one place.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="feedbacks" class="py-16 md:py-24 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12 md:mb-16 section-animate">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Loved by Teams Worldwide</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Hear what our satisfied users have to say about TaskFlow and how it transformed their project management.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-slate-50 p-8 rounded-xl shadow-lg feedback-card section-animate">
+                <div class="flex items-center mb-4">
+                    <img src="https://placehold.co/100x100/e2e8f0/4a5568?text=AS" alt="Alex Smith" class="feedback-avatar mr-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Alex Smith</h4>
+                        <p class="text-xs text-indigo-600">CEO, Innovate Solutions</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm italic">"TaskFlow has revolutionized how we manage our projects. The intuitive interface and powerful features keep our team aligned and productive. Highly recommended!"</p>
+            </div>
+            <div class="bg-slate-50 p-8 rounded-xl shadow-lg feedback-card section-animate" style="transition-delay: 0.1s;">
+                <div class="flex items-center mb-4">
+                    <img src="https://placehold.co/100x100/fed7d7/742a2a?text=MJ" alt="Maria Jones" class="feedback-avatar mr-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Maria Jones</h4>
+                        <p class="text-xs text-indigo-600">Project Manager, Creative Co.</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm italic">"Since adopting TaskFlow, our project completion rates have soared. The collaboration tools are fantastic, and the reporting gives us clear insights."</p>
+            </div>
+            <div class="bg-slate-50 p-8 rounded-xl shadow-lg feedback-card section-animate" style="transition-delay: 0.2s;">
+                <div class="flex items-center mb-4">
+                    <img src="https://placehold.co/100x100/c6f6d5/276749?text=DL" alt="David Lee" class="feedback-avatar mr-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">David Lee</h4>
+                        <p class="text-xs text-indigo-600">Lead Developer, Tech Forward</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm italic">"As a developer, I appreciate the clear task assignments and progress tracking. TaskFlow makes it easy to focus on what matters and deliver quality work on time."</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="py-16 md:py-24 bg-indigo-700 text-white">
+    <div class="container mx-auto px-6 text-center section-animate">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Project Management?</h2>
+        <p class="text-indigo-200 max-w-xl mx-auto mb-10">
+            Join thousands of teams who trust TaskFlow to deliver projects on time and on budget.
+        </p>
+        <a href="register-company.html" class="bg-white text-indigo-700 font-semibold px-10 py-4 rounded-lg shadow-lg text-lg hover:bg-indigo-50 transition duration-150 cta-button">
+            Sign Up Now
+        </a>
+    </div>
+</section>
+
+<footer class="bg-slate-800 text-slate-400 py-12">
+    <div class="container mx-auto px-6 text-center">
+        <a href="#" class="text-xl font-semibold text-indigo-400 flex items-center justify-center mb-4">
+            <i class="fas fa-tasks mr-2"></i>TaskFlow
+        </a>
+        <p class="text-sm mb-4">&copy; <span id="currentYear"></span> TaskFlow CMS. All rights reserved.</p>
+        <div class="space-x-4">
+            <a href="#" class="hover:text-indigo-400">Privacy Policy</a>
+            <a href="#" class="hover:text-indigo-400">Terms of Service</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            // Close mobile menu if open
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+            // Scroll to target
+            if (targetId === "#") {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const navbarHeight = document.querySelector('nav').offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - navbarHeight;
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    const animatedSections = document.querySelectorAll('.section-animate');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    animatedSections.forEach(section => {
+        observer.observe(section);
+    });
+</script>
+</body>
+</html>

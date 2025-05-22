@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members View - CMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .avatar-initials {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #4f46e5; /* Indigo-600 */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.5rem; /* 24px */
+            text-transform: uppercase;
+        }
+        .member-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.04);
+        }
+        /* Modal transition styles */
+        .modal-bg-enter { transition: opacity 0.3s ease-out; }
+        .modal-bg-enter-from { opacity: 0; }
+        .modal-bg-enter-to { opacity: 1; }
+        .modal-bg-leave { transition: opacity 0.2s ease-in; }
+        .modal-bg-leave-from { opacity: 1; }
+        .modal-bg-leave-to { opacity: 0; }
+
+        .modal-panel-enter { transition: all 0.3s ease-out; }
+        .modal-panel-enter-from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+        .modal-panel-enter-to { opacity: 1; transform: translateY(0) scale(1); }
+        .modal-panel-leave { transition: all 0.2s ease-in; }
+        .modal-panel-leave-from { opacity: 1; transform: translateY(0) scale(1); }
+        .modal-panel-leave-to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+
+        .loading-spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .message-area {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        .message-success {
+            background-color: #d1fae5; color: #065f46; border: 1px solid #34d399;
+        }
+        .message-error {
+            background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-6 lg:p-8">
+<div class="container mx-auto">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Team Members</h1>
+        <p class="text-gray-600">Manage your company's team members.</p>
+    </header>
+
+    <div id="globalMessage" class="message-area hidden"></div>
+
+    <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <button id="addMemberBtn" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out flex items-center justify-center">
+            <i class="fas fa-user-plus mr-2"></i> Add New Member
+        </button>
+        <div class="w-full sm:w-auto flex flex-col sm:flex-row gap-2">
+            <input type="text" id="searchMember" placeholder="Search members by name or email..." class="w-full sm:w-64 bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+            <select id="filterPosition" class="w-full sm:w-auto bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                <option value="all">All Positions</option>
+                <option value="Developer">Developer</option>
+                <option value="Designer">Designer</option>
+                <option value="Manager">Manager</option>
+                <option value="QA Tester">QA Tester</option>
+                <option value="Analyst">Analyst</option>
+                <option value="CEO">CEO</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="loadingIndicator" class="loading-spinner-container hidden"><div class="loading-spinner"></div></div>
+
+    <div id="memberGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    </div>
+
+    <div id="noMembersMessage" class="hidden text-center py-12">
+        <i class="fas fa-users-slash fa-3x text-gray-400 mb-4"></i>
+        <p class="text-xl text-gray-600">No members found.</p>
+        <p class="text-gray-500">Start by adding a new team member or check your filters!</p>
+    </div>
+</div>
+
+<div id="memberModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 overflow-y-auto h-full w-full flex items-center justify-center hidden px-4 modal-bg-enter-from" data-transition-state="closed">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg transform transition-all modal-panel-enter-from">
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="modalTitle" class="text-2xl font-semibold text-gray-800">Add New Member</h2>
+            <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+        <form id="memberForm">
+            <input type="hidden" id="memberId" name="MemberID">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                <div>
+                    <label for="memberName" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="memberName" name="Name" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                </div>
+                <div>
+                    <label for="memberEmail" class="block text-sm font-medium text-gray-700 mb-1">Email Address <span class="text-red-500">*</span></label>
+                    <input type="email" id="memberEmail" name="Email" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                </div>
+                <div>
+                    <label for="memberPosition" class="block text-sm font-medium text-gray-700 mb-1">Position <span class="text-red-500">*</span></label>
+                    <input type="text" id="memberPosition" name="Position" placeholder="e.g., Software Engineer" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                </div>
+                <div>
+                    <label for="memberCompanyID" class="block text-sm font-medium text-gray-700 mb-1">Company ID <span class="text-red-500">*</span></label>
+                    <input type="number" id="memberCompanyID" name="CompanyID" placeholder="Company ID" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="memberPassword" class="block text-sm font-medium text-gray-700 mb-1">Password <span id="passwordRequiredIndicator" class="text-red-500">*</span></label>
+                    <input type="password" id="memberPassword" name="Password" placeholder="Enter new password (if changing)" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <p class="text-xs text-gray-500 mt-1">Required for new members. Leave blank if not changing password for existing member.</p>
+                </div>
+            </div>
+
+            <div id="modalMessage" class="message-area hidden mt-4"></div>
+
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
+                <button type="button" id="cancelModalBtn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors">Cancel</button>
+                <button type="submit" id="saveMemberBtn" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-lg shadow-md transition-colors">
+                    <span id="saveMemberBtnText">Save Member</span>
+                    <i id="saveMemberBtnSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = '/api';
+
+    // DOM Elements
+    const memberGrid = document.getElementById('memberGrid');
+    const noMembersMessage = document.getElementById('noMembersMessage');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const globalMessage = document.getElementById('globalMessage');
+
+    const memberModal = document.getElementById('memberModal');
+    const addMemberBtn = document.getElementById('addMemberBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const memberForm = document.getElementById('memberForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+    const saveMemberBtn = document.getElementById('saveMemberBtn');
+    const saveMemberBtnText = document.getElementById('saveMemberBtnText');
+    const saveMemberBtnSpinner = document.getElementById('saveMemberBtnSpinner');
+    const passwordRequiredIndicator = document.getElementById('passwordRequiredIndicator');
+
+    const searchMemberInput = document.getElementById('searchMember');
+    const filterPositionSelect = document.getElementById('filterPosition');
+
+    let allMembers = []; // To store all fetched members for client-side filtering
+
+    // --- Authentication Placeholder ---
+    function getAuthToken() {
+        // return localStorage.getItem('authToken');
+        return 'dummy-auth-token'; // Placeholder
+    }
+
+    // --- Utility Functions ---
+    function showGlobalMessage(message, type = 'error') {
+        globalMessage.textContent = message;
+        globalMessage.className = `message-area ${type === 'success' ? 'message-success' : 'message-error'}`;
+        globalMessage.classList.remove('hidden');
+        setTimeout(() => globalMessage.classList.add('hidden'), 5000);
+    }
+    function showModalMessage(message, type = 'error') {
+        modalMessage.textContent = message;
+        modalMessage.className = `message-area ${type === 'success' ? 'message-success' : 'message-error'}`;
+        modalMessage.classList.remove('hidden');
+    }
+    function getInitials(name) {
+        if (!name || typeof name !== 'string') return '?';
+        const parts = name.trim().split(' ');
+        if (parts.length === 1 && parts[0].length > 0) return parts[0].substring(0, 2).toUpperCase();
+        if (parts.length > 1) {
+            return (parts[0][0] + (parts[parts.length - 1][0] || '')).toUpperCase();
+        }
+        return name.substring(0, 2).toUpperCase() || '?';
+    }
+
+    // --- API Interaction Functions ---
+    async function fetchMembers() {
+        loadingIndicator.classList.remove('hidden');
+        memberGrid.classList.add('hidden');
+        noMembersMessage.classList.add('hidden');
+        try {
+            const token = getAuthToken();
+            const response = await fetch(`${API_BASE_URL}/members`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
+                throw new Error(errorData.message || `Failed to fetch members. Status: ${response.status}`);
+            }
+            const data = await response.json();
+            allMembers = data.members || data; // Adapt to your API response structure
+            filterAndRenderMembers();
+        } catch (error) {
+            console.error('Error fetching members:', error);
+            showGlobalMessage(`Error fetching members: ${error.message}`);
+            allMembers = [];
+            filterAndRenderMembers();
+        } finally {
+            loadingIndicator.classList.add('hidden');
+        }
+    }
+
+    // Render Member Cards
+    function renderMembers(membersToRender = allMembers) {
+        memberGrid.innerHTML = '';
+        if (membersToRender.length === 0) {
+            noMembersMessage.classList.remove('hidden');
+            memberGrid.classList.add('hidden');
+        } else {
+            noMembersMessage.classList.add('hidden');
+            memberGrid.classList.remove('hidden');
+            membersToRender.forEach(member => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-lg p-6 member-card flex flex-col items-center text-center';
+
+                // MemberID, Name, Email, Position, CompanyID from DB
+                card.innerHTML = `
+                        <div class="avatar-initials mb-4">${getInitials(member.Name)}</div>
+                        <h2 class="text-lg font-semibold text-gray-800">${member.Name}</h2>
+                        <p class="text-sm text-teal-600 font-medium capitalize">${member.Position || 'N/A'}</p>
+                        <p class="text-xs text-gray-500 mt-1 break-all">${member.Email}</p>
+                        <p class="text-xs text-gray-500 mt-1">Company ID: ${member.CompanyID}</p>
+                        <div class="mt-4 pt-4 border-t border-gray-200 w-full flex justify-center gap-2">
+                            <button class="edit-btn text-blue-600 hover:text-blue-800 text-sm font-medium" data-id="${member.MemberID}"><i class="fas fa-edit mr-1"></i>Edit</button>
+                            <button class="delete-btn text-red-600 hover:text-red-800 text-sm font-medium" data-id="${member.MemberID}"><i class="fas fa-trash mr-1"></i>Delete</button>
+                        </div>
+                    `;
+                memberGrid.appendChild(card);
+            });
+        }
+        attachEventListenersToCards();
+    }
+
+    function attachEventListenersToCards() {
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', handleEditMember);
+        });
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', handleDeleteMember);
+        });
+    }
+
+    // Modal Management
+    function openModal(member = null) {
+        memberForm.reset();
+        modalMessage.classList.add('hidden');
+        document.getElementById('memberPassword').setAttribute('placeholder', 'Enter password');
+        passwordRequiredIndicator.style.display = 'inline';
+
+
+        if (member) {
+            modalTitle.textContent = 'Edit Member';
+            document.getElementById('memberId').value = member.MemberID;
+            document.getElementById('memberName').value = member.Name;
+            document.getElementById('memberEmail').value = member.Email;
+            document.getElementById('memberPosition').value = member.Position || '';
+            document.getElementById('memberCompanyID').value = member.CompanyID;
+            document.getElementById('memberPassword').setAttribute('placeholder', 'Leave blank to keep current password');
+            document.getElementById('memberPassword').required = false; // Not required for edit if not changing
+            passwordRequiredIndicator.style.display = 'none';
+
+        } else {
+            modalTitle.textContent = 'Add New Member';
+            document.getElementById('memberId').value = '';
+            document.getElementById('memberPassword').required = true;
+            // Pre-fill CompanyID if available from user session (example)
+            // const userData = JSON.parse(localStorage.getItem('userData'));
+            // if (userData && userData.companyId) {
+            //    document.getElementById('memberCompanyID').value = userData.companyId;
+            // }
+        }
+        memberModal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            memberModal.classList.remove('modal-bg-enter-from');
+            memberModal.querySelector('.modal-panel-enter-from').classList.remove('modal-panel-enter-from');
+            memberModal.dataset.transitionState = 'opened';
+        });
+    }
+
+    function closeModal() {
+        memberModal.dataset.transitionState = 'closing';
+        memberModal.classList.add('modal-bg-leave-to');
+        memberModal.querySelector('div > div').classList.add('modal-panel-leave-to');
+        setTimeout(() => {
+            memberModal.classList.add('hidden');
+            memberModal.classList.remove('modal-bg-leave-to', 'modal-bg-enter-from');
+            const panel = memberModal.querySelector('div > div');
+            panel.classList.remove('modal-panel-leave-to', 'modal-panel-enter-from');
+            memberModal.dataset.transitionState = 'closed';
+        }, 200);
+    }
+
+    addMemberBtn.addEventListener('click', () => openModal());
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelModalBtn.addEventListener('click', closeModal);
+
+    // Form Submission
+    memberForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        saveMemberBtnText.textContent = 'Saving...';
+        saveMemberBtnSpinner.classList.remove('hidden');
+        saveMemberBtn.disabled = true;
+        modalMessage.classList.add('hidden');
+
+        const formData = new FormData(memberForm);
+        const memberData = {};
+        // Map form names to DB column names
+        memberData.Name = formData.get('Name');
+        memberData.Email = formData.get('Email');
+        memberData.Position = formData.get('Position');
+        memberData.CompanyID = parseInt(formData.get('CompanyID'), 10);
+
+        const password = formData.get('Password');
+        if (password) { // Only include password if provided
+            memberData.Password = password;
+        }
+
+        const memberId = document.getElementById('memberId').value;
+        const method = memberId ? 'PUT' : 'POST';
+        const endpoint = memberId ? `${API_BASE_URL}/members/${memberId}` : `${API_BASE_URL}/members`;
+
+        try {
+            const token = getAuthToken();
+            const response = await fetch(endpoint, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(memberData)
+            });
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || `Failed to ${memberId ? 'update' : 'add'} member. Status: ${response.status}`);
+            }
+
+            showGlobalMessage(`Member successfully ${memberId ? 'updated' : 'added'}!`, 'success');
+            fetchMembers();
+            closeModal();
+
+        } catch (error) {
+            console.error(`Error ${memberId ? 'updating' : 'adding'} member:`, error);
+            showModalMessage(`Error: ${error.message}`);
+        } finally {
+            saveMemberBtnText.textContent = 'Save Member';
+            saveMemberBtnSpinner.classList.add('hidden');
+            saveMemberBtn.disabled = false;
+        }
+    });
+
+    function handleEditMember(event) {
+        const memberId = event.currentTarget.dataset.id;
+        const memberToEdit = allMembers.find(m => m.MemberID == memberId); // Use MemberID from DB
+        if (memberToEdit) {
+            openModal(memberToEdit);
+        }
+    }
+
+    async function handleDeleteMember(event) {
+        const memberId = event.currentTarget.dataset.id;
+        if (confirm('Are you sure you want to delete this member?')) {
+            try {
+                const token = getAuthToken();
+                const response = await fetch(`${API_BASE_URL}/members/${memberId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
+                    throw new Error(errorData.message || `Failed to delete member. Status: ${response.status}`);
+                }
+                showGlobalMessage('Member deleted successfully.', 'success');
+                fetchMembers();
+            } catch (error) {
+                console.error('Error deleting member:', error);
+                showGlobalMessage(`Error deleting member: ${error.message}`);
+            }
+        }
+    }
+
+    // Client-side Filtering and Searching
+    function filterAndRenderMembers() {
+        const positionFilter = filterPositionSelect.value;
+        const searchTerm = searchMemberInput.value.toLowerCase();
+        let tempMembers = allMembers;
+
+        if (positionFilter !== 'all') {
+            tempMembers = tempMembers.filter(m => m.Position === positionFilter);
+        }
+        if (searchTerm) {
+            tempMembers = tempMembers.filter(m =>
+                (m.Name && m.Name.toLowerCase().includes(searchTerm)) ||
+                (m.Email && m.Email.toLowerCase().includes(searchTerm))
+            );
+        }
+        renderMembers(tempMembers);
+    }
+
+    searchMemberInput.addEventListener('input', filterAndRenderMembers);
+    filterPositionSelect.addEventListener('change', filterAndRenderMembers);
+
+    // --- Initial Load ---
+    // if (!getAuthToken()) { window.location.href = '/login.html'; }
+    // else {
+    fetchMembers();
+    // }
+</script>
+</body>
+</html>

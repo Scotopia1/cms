@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporting View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            height: 350px; /* Default height for chart containers */
+            position: relative; /* Needed for Chart.js responsiveness */
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        .stat-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-6 lg:p-8">
+<div class="container mx-auto">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Reporting View</h1>
+        <p class="text-gray-600">Gain insights into your project performance and team productivity.</p>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+            <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-full mr-4">
+                    <i class="fas fa-project-diagram fa-lg text-blue-600"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Total Projects</p>
+                    <p id="totalProjectsStat" class="text-2xl font-semibold text-gray-800">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+            <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-full mr-4">
+                    <i class="fas fa-tasks fa-lg text-green-600"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Completed Tasks</p>
+                    <p id="completedTasksStat" class="text-2xl font-semibold text-gray-800">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+            <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-full mr-4">
+                    <i class="fas fa-clock fa-lg text-yellow-600"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Pending Tasks</p>
+                    <p id="pendingTasksStat" class="text-2xl font-semibold text-gray-800">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+            <div class="flex items-center">
+                <div class="p-3 bg-red-100 rounded-full mr-4">
+                    <i class="fas fa-exclamation-triangle fa-lg text-red-600"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Overdue Tasks</p>
+                    <p id="overdueTasksStat" class="text-2xl font-semibold text-gray-800">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-xl">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Project Status Distribution</h2>
+            <div class="chart-container">
+                <canvas id="projectStatusChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-xl">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Task Priority Distribution</h2>
+            <div class="chart-container">
+                <canvas id="taskPriorityChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-xl lg:col-span-2">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Tasks per Project</h2>
+            <div class="chart-container" style="height: 400px;"> <canvas id="tasksPerProjectChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-xl lg:col-span-2">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Task Completion Over Time (Example)</h2>
+            <div class="chart-container" style="height: 400px;">
+                <canvas id="taskCompletionChart"></canvas>
+            </div>
+            <p class="text-sm text-gray-500 mt-2 text-center">Note: This is a sample line chart. Real data would be needed for accurate trends.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Dummy Data (ensure this is consistent with other views) ---
+    let projectsData = [
+        { id: 1, name: 'E-commerce Platform', status: 'in-progress', progress: 65 },
+        { id: 2, name: 'Mobile App Redesign', status: 'completed', progress: 100 },
+        { id: 3, name: 'Marketing Campaign Q3', status: 'on-hold', progress: 20 },
+        { id: 4, name: 'New Website Launch', status: 'not-started', progress: 0 },
+        { id: 5, name: 'API Integration', status: 'in-progress', progress: 40 },
+        { id: 6, name: 'Data Analytics Dashboard', status: 'not-started', progress: 0 }
+    ];
+
+    let tasksData = [
+        { id: 1, name: 'Design Homepage UI', projectId: 1, priority: 'high', status: 'in-progress', dueDate: '2024-07-15' },
+        { id: 2, name: 'Develop Payment Gateway', projectId: 1, priority: 'high', status: 'todo', dueDate: '2024-08-01' },
+        { id: 3, name: 'User Testing for Mobile App', projectId: 2, priority: 'medium', status: 'completed', dueDate: '2024-07-20' },
+        { id: 4, name: 'Finalize Q3 Ad Creatives', projectId: 3, priority: 'medium', status: 'completed', dueDate: '2024-06-30' },
+        { id: 5, name: 'Setup Staging Environment', projectId: 4, priority: 'high', status: 'blocked', dueDate: '2024-05-01' }, // Overdue example
+        { id: 6, name: 'Write API Documentation', projectId: 5, priority: 'low', status: 'todo', dueDate: '2024-09-01' },
+        { id: 7, name: 'Product Page Backend Logic', projectId: 1, priority: 'high', status: 'in-progress', dueDate: '2024-07-25'},
+        { id: 8, name: 'Mobile App Onboarding Flow', projectId: 2, priority: 'medium', status: 'todo', dueDate: '2024-08-10'},
+        { id: 9, name: 'Content Creation for Website', projectId: 4, priority: 'medium', status: 'not-started', dueDate: '2024-10-01'},
+        { id: 10, name: 'Test API Endpoints', projectId: 5, priority: 'high', status: 'completed', dueDate: '2024-06-15'},
+    ];
+    // --- End Dummy Data ---
+
+    // Chart.js Global Configuration (Optional)
+    Chart.defaults.font.family = 'Inter, sans-serif';
+
+    // --- Utility Functions ---
+    function countByProperty(data, property) {
+        return data.reduce((acc, item) => {
+            const key = item[property];
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+        }, {});
+    }
+
+    function hexToRgba(hex, alpha = 1) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    // --- Update Summary Stats ---
+    function updateSummaryStats() {
+        document.getElementById('totalProjectsStat').textContent = projectsData.length;
+
+        const completedTasks = tasksData.filter(task => task.status === 'completed').length;
+        document.getElementById('completedTasksStat').textContent = completedTasks;
+
+        const pendingTasks = tasksData.filter(task => task.status === 'todo' || task.status === 'in-progress').length;
+        document.getElementById('pendingTasksStat').textContent = pendingTasks;
+
+        const today = new Date().setHours(0,0,0,0); // Get today's date at midnight
+        const overdueTasks = tasksData.filter(task =>
+            task.dueDate && new Date(task.dueDate + 'T00:00:00') < today && task.status !== 'completed'
+        ).length;
+        document.getElementById('overdueTasksStat').textContent = overdueTasks;
+    }
+
+
+    // --- Chart Rendering ---
+    // 1. Project Status Distribution (Pie Chart)
+    function renderProjectStatusChart() {
+        const statusCounts = countByProperty(projectsData, 'status');
+        const labels = Object.keys(statusCounts);
+        const data = Object.values(statusCounts);
+
+        const projectStatusColors = {
+            'not-started': '#9ca3af', // Gray
+            'in-progress': '#3b82f6', // Blue
+            'completed': '#22c55e', // Green
+            'on-hold': '#f59e0b'  // Amber/Yellow
+        };
+
+        new Chart(document.getElementById('projectStatusChart'), {
+            type: 'pie',
+            data: {
+                labels: labels.map(label => label.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')),
+                datasets: [{
+                    label: 'Project Status',
+                    data: data,
+                    backgroundColor: labels.map(label => projectStatusColors[label] || '#cccccc'),
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 2. Task Priority Distribution (Doughnut Chart)
+    function renderTaskPriorityChart() {
+        const priorityCounts = countByProperty(tasksData, 'priority');
+        const labels = Object.keys(priorityCounts);
+        const data = Object.values(priorityCounts);
+
+        const taskPriorityColors = {
+            'low': '#34d399',    // Emerald-400
+            'medium': '#fbbf24', // Amber-400
+            'high': '#f87171'    // Red-400
+        };
+
+        new Chart(document.getElementById('taskPriorityChart'), {
+            type: 'doughnut',
+            data: {
+                labels: labels.map(label => label.charAt(0).toUpperCase() + label.slice(1)),
+                datasets: [{
+                    label: 'Task Priority',
+                    data: data,
+                    backgroundColor: labels.map(label => taskPriorityColors[label] || '#cccccc'),
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    }
+
+    // 3. Tasks per Project (Bar Chart)
+    function renderTasksPerProjectChart() {
+        const tasksByProject = projectsData.map(project => {
+            return {
+                name: project.name,
+                taskCount: tasksData.filter(task => task.projectId === project.id).length
+            };
+        });
+
+        const labels = tasksByProject.map(p => p.name);
+        const data = tasksByProject.map(p => p.taskCount);
+
+        const barColors = [
+            '#60a5fa', '#34d399', '#facc15', '#f87171', '#a78bfa', '#fb923c'
+        ];
+
+        new Chart(document.getElementById('tasksPerProjectChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Tasks',
+                    data: data,
+                    backgroundColor: data.map((_, i) => hexToRgba(barColors[i % barColors.length], 0.7)),
+                    borderColor: data.map((_, i) => barColors[i % barColors.length]),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1 // Ensure y-axis shows whole numbers for task counts
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Often not needed for single dataset bar charts
+                    }
+                }
+            }
+        });
+    }
+
+    // 4. Task Completion Over Time (Line Chart - Sample)
+    function renderTaskCompletionChart() {
+        // This is sample data. In a real application, you'd aggregate task completion by date.
+        const sampleLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+        const sampleDataCompleted = [10, 12, 15, 13, 18, 22, 25]; // Cumulative completed tasks
+        const sampleDataCreated = [15, 18, 20, 22, 25, 30, 32];   // Cumulative created tasks
+
+        new Chart(document.getElementById('taskCompletionChart'), {
+            type: 'line',
+            data: {
+                labels: sampleLabels,
+                datasets: [
+                    {
+                        label: 'Tasks Completed',
+                        data: sampleDataCompleted,
+                        borderColor: '#22c55e', // Green
+                        backgroundColor: hexToRgba('#22c55e', 0.1),
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Tasks Created',
+                        data: sampleDataCreated,
+                        borderColor: '#3b82f6', // Blue
+                        backgroundColor: hexToRgba('#3b82f6', 0.1),
+                        fill: true,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                }
+            }
+        });
+    }
+
+
+    // --- Initialize View ---
+    document.addEventListener('DOMContentLoaded', () => {
+        updateSummaryStats();
+        renderProjectStatusChart();
+        renderTaskPriorityChart();
+        renderTasksPerProjectChart();
+        renderTaskCompletionChart();
+    });
+</script>
+</body>
+</html>
