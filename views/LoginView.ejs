@@ -68,7 +68,7 @@
 
     <p class="mt-8 text-center text-sm text-gray-600">
         Don't have an account?
-        <a href="/register-company.html" class="font-medium text-indigo-600 hover:text-indigo-500">Register your company</a>
+        <a href="/ui/signup" class="font-medium text-indigo-600 hover:text-indigo-500">Register your company</a>
     </p>
 </div>
 
@@ -78,79 +78,28 @@
     const messageBox = document.getElementById('messageBox');
 
     loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        messageBox.textContent = '';
-        messageBox.className = 'mt-4 text-center text-sm'; // Reset classes
-        loginButton.disabled = true;
-        loginButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing In...';
-
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        try {
-            // In a real application, you would make a POST request to your backend API
-            // Example: const response = await fetch('/api/auth/login', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ email, password })
-            // });
-
-            // Simulating API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // ---- START MOCK API RESPONSE (Replace with actual fetch) ----
-            let mockSuccess = true; // Change to false to test error
-            let response;
-            if (email === "admin@example.com" && password === "password") { // Dummy credentials
-                response = {
-                    ok: true,
-                    json: async () => ({
-                        success: true,
-                        message: 'Login successful!',
-                        token: 'dummy-auth-token-12345', // Backend would provide a real token
-                        user: { name: 'Admin User', companyId: 1 }
-                    })
-                };
-            } else {
-                response = {
-                    ok: false,
-                    status: 401,
-                    json: async () => ({
-                        success: false,
-                        message: 'Invalid email or password.'
-                    })
-                };
-                mockSuccess = false;
-            }
-            // ---- END MOCK API RESPONSE ----
-
-            const result = await response.json();
-
-            if (response.ok && result.success) {
-                messageBox.textContent = result.message;
-                messageBox.classList.add('text-green-600');
-
-                // Store the token (e.g., in localStorage or sessionStorage)
-                // localStorage.setItem('authToken', result.token);
-                // localStorage.setItem('userData', JSON.stringify(result.user)); // Store user info if needed
-
-                // Redirect to dashboard or project view
-                // window.location.href = '/dashboard.html'; // Or your main application page
-                alert('Login successful! Token: ' + result.token + '. User: ' + result.user.name + '. Redirecting...');
-                // For demonstration, we'll just log and alert.
-                // In a real app, you would redirect: window.location.href = '/project-view.html'; (or your main dashboard)
-
-            } else {
-                messageBox.textContent = result.message || 'Login failed. Please try again.';
-                messageBox.classList.add('text-red-600');
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            messageBox.textContent = 'An error occurred. Please try again later.';
-            messageBox.classList.add('text-red-600');
-        } finally {
-            loginButton.disabled = false;
-            loginButton.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Sign In';
+        if (!email || !password) {
+            messageBox.innerHTML = '<p class="text-red-500">Please fill in all fields.</p>';
+            return;
+        }
+        event.preventDefault();
+        loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+        loginButton.disabled = true;
+        messageBox.innerHTML = '';
+        const isValidCredentials = await fetch('api/cms/company/members/', {
+            method: 'GET',
+            body: '{"Email": email, "Password": password},'
+        }).then(response => response.json());
+        if (isValidCredentials) {
+            messageBox.innerHTML = '<p class="text-green-500">Login successful! Redirecting...</p>';
+            setTimeout(() => {
+                window.location.href = '/ui/dashboard';
+            }, 2000);
+        } else {
+            messageBox.innerHTML = '<p class="text-red-500">Invalid email or password.</p>';
         }
     });
 </script>

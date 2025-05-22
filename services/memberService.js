@@ -25,9 +25,9 @@ const MemberService = {
         }
     },
 
-    isPasswordValid: async (memberId, password) => {
+    isPasswordValid: async (Email, password) => {
         try {
-            return await MemberRepository.isPasswordValid(memberId, password);
+            return await MemberRepository.isPasswordValid(Email, password);
         } catch (error) {
             throw new Error('Error validating member password: ' + error.message);
         }

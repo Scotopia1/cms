@@ -41,6 +41,14 @@ const CompanyService = {
         }
     },
 
+    setAdmin: async (companyId, adminId) => {
+        try {
+            return await companyRepository.setAdmin(companyId, adminId);
+        } catch (error) {
+            throw new Error(`Error setting admin for company with ID ${companyId}: ${error.message}`);
+        }
+    },
+
     deleteCompany: async (CompanyID) => {
         try {
             return await companyRepository.delete(CompanyID);

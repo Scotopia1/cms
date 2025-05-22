@@ -97,6 +97,23 @@ const CompanyRepository = {
             throw new Error(`Error updating company: ${error.message}`);
         }
     },
+    /**
+     * Sets a user as an admin for a company.
+     * @param companyID
+     * @param userID
+     * @returns {Promise<{affectedRows: *}>}
+     */
+    setAdmin: async (companyID, userID) => {
+        try {
+            const sql = `UPDATE company SET AdminID = ? WHERE CompanyID = ?`;
+            const { affectedRows } = await db.query(sql, [userID, companyID]);
+            return {
+                affectedRows
+            };
+        } catch (error) {
+            throw new Error(`Error setting admin for company with ID ${companyID}: ${error.message}`);
+        }
+    },
 
     /**
      * Deletes a company from the database.

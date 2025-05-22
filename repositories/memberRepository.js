@@ -56,22 +56,22 @@ const MemberRepository = {
      * @param password
      * @returns {Promise<void|*|{message: string}|boolean>}
      */
-    isPasswordValid: async (memberId, password) => {
+    isPasswordValid: async (Email, password) => {
         try {
-            if(await this.MemberExists(memberId)){
+            if(!(await this.MemberExistsbyEmail(Email))){
                 return {
                     message: 'Member does not exist'
                 }
             }
-            const sql = `SELECT Password FROM member WHERE MemberID = ?`;
-            const rows = await db.query(sql, [memberId]);
+            const sql = `SELECT Password FROM member WHERE Email = ?`;
+            const rows = await db.query(sql, [Email]);
             if (rows.length === 0) {
                 return false;
             }
             const hashedPassword = rows[0].Password;
             return await Utils.comparePassword(password, hashedPassword);
         } catch (error) {
-            throw new Error(`Error validating password for member with ID ${memberId}: ${error.message}`);
+            throw new Error(`Error validating password for member with ID ${Email}: ${error.message}`);
         }
     },
 
@@ -191,6 +191,16 @@ const MemberRepository = {
         try {
             const sql = `SELECT * FROM member WHERE MemberID = ?`;
             const rows = await db.query(sql, [memberId]);
+            return rows.length > 0;
+        } catch (error) {
+            throw new Error(`Error checking if member exists: ${error.message}`);
+        }
+    },
+
+    MemberExistsbyEmail: async (email) => {
+        try {
+            const sql = `SELECT * FROM member WHERE Email = ?`;
+            const rows = await db.query(sql, [email]);
             return rows.length > 0;
         } catch (error) {
             throw new Error(`Error checking if member exists: ${error.message}`);

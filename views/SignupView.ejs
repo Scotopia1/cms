@@ -93,7 +93,7 @@
 
     <p class="mt-8 text-center text-sm text-gray-600">
         Already have an account?
-        <a href="/login.html" class="font-medium text-purple-600 hover:text-purple-500">Sign In</a>
+        <a href="../ui/login" class="font-medium text-purple-600 hover:text-purple-500">Sign In</a>
     </p>
 </div>
 
@@ -124,74 +124,74 @@
             Position: document.getElementById('adminPosition').value,
         };
 
-        const payload = {
-            company: companyData,
-            adminUser: adminUserData
-        };
+        console.log("Creating company...");
 
-        try {
-            // In a real application, you would make a POST request to your backend API
-            // Example: const response = await fetch('/api/auth/register-company', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify(payload)
-            // });
+        const createcompany = await fetch('../api/company/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: {
+                Name: companyData.Name,
+                Location: companyData.Location,
+                ContactInfo: companyData.ContactInfo,
+                Industry: companyData.Industry,
+                Website: companyData.Website,
+            },
+        });
+        console.log("new company created!");
 
-            // Simulating API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+        const newCompany = await fetch('../api/cms/companies', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log("new company get!");
 
-            // ---- START MOCK API RESPONSE (Replace with actual fetch) ----
-            let mockSuccess = true; // Change to false to test error
-            let response;
+        let companyId;
 
-            // Simulate a successful registration
-            if (mockSuccess) {
-                response = {
-                    ok: true,
-                    json: async () => ({
-                        success: true,
-                        message: 'Company and admin account registered successfully! Please login.',
-                        companyId: 123, // Example ID from backend
-                        adminUserId: 456 // Example ID from backend
-                    })
-                };
-            } else { // Simulate a failure (e.g., email already exists)
-                response = {
-                    ok: false,
-                    status: 400, // Or 409 for conflict, etc.
-                    json: async () => ({
-                        success: false,
-                        message: 'Registration failed. Email may already be in use or company name is taken.'
-                    })
-                };
+        for (let i = 0; i < newCompany.length; i++) {
+            if (newCompany[i].Name === companyData.Name) {
+                companyId = newCompany[i].CompanyID;
             }
-            // ---- END MOCK API RESPONSE ----
-
-            const result = await response.json();
-
-            if (response.ok && result.success) {
-                messageBox.textContent = result.message;
-                messageBox.classList.add('text-green-600', 'p-3', 'bg-green-50', 'rounded-md');
-                registrationForm.reset(); // Clear the form
-                // Optionally redirect to login page after a delay
-                // setTimeout(() => {
-                //    window.location.href = '/login.html';
-                // }, 3000);
-                alert('Registration successful! Company ID: ' + result.companyId + '. Admin ID: ' + result.adminUserId + '. Redirecting to login...');
-
-
-            } else {
-                messageBox.textContent = result.message || 'Registration failed. Please check your details and try again.';
-                messageBox.classList.add('text-red-600', 'p-3', 'bg-red-50', 'rounded-md');
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
-            messageBox.textContent = 'An error occurred during registration. Please try again later.';
-            messageBox.classList.add('text-red-600', 'p-3', 'bg-red-50', 'rounded-md');
-        } finally {
-            registerButton.disabled = false;
-            registerButton.innerHTML = '<i class="fas fa-user-plus mr-2"></i>Create Account';
         }
+
+        const createAdminUser = await fetch('../api/cms/company/members', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'CompanyID': companyId,
+            },
+            body: {
+                Name: adminUserData.Name,
+                Email: adminUserData.Email,
+                Password: adminUserData.Password,
+                Position: adminUserData.Position,
+            },
+        });
+        console.log("new admin user created!");
+
+        const newAdminUser = await fetch('../api/cms/company/members', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'name': adminUserData.Name,
+            },
+        });
+        console.log("new admin user get!");
+
+        const applyAdminUser = await fetch('../api/cms/companies/set-admin/', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'CompanyID': companyId,
+            },
+            body: {
+                AdminID: newAdminUser[0].MemberID,
+            },
+        });
+        console.log("new admin user set!");
     });
 </script>
 </body>

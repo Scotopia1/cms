@@ -7,9 +7,9 @@ const router = express.Router();
 
 // Get requests
 router.get('/:CompanyID', validateCompanyId, MemberController.getAllMembersByCompanyId); // Get all members
-router.get('/name/:CompanyID/:name', validateCompanyId, validateMember,MemberController.getMemberbyName); // Get member by name
+router.get('/name/:name', validateMember, MemberController.getMemberbyName); // Get member by name
 router.get('/details/:MemberID', MemberController.getMemberDetails); // Combine details into one endpoint
-router.get('/:MemberID', validateMemberId, MemberController.isPasswordValid); // Get member by id
+router.get('/password/', validateMemberId, MemberController.isPasswordValid); // Get member by id
 
 // Post requests
 router.post('/:CompanyID/',validateCompanyId ,validateMember, MemberController.createMember); // Create a member

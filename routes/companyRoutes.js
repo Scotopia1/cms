@@ -12,6 +12,9 @@ router.post('/', CompanyController.createCompany);
 // Update a company (form PUT)
 router.put('/edit/:CompanyID', CompanyController.updateCompany);
 
+// Set admin for a company (form PUT)
+router.put('/set-admin/:CompanyID', CompanyController.setAdmin);
+
 // Delete a company (form DELETE)
 router.delete('/delete/:CompanyID', CompanyController.deleteCompany);
 

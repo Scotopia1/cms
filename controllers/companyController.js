@@ -57,6 +57,25 @@ const CompanyController = {
             res.status(500).json({ message: error.message });
         }
     },
+    /**
+     * Set admin for a company
+     * @param req
+     * @param res
+     * @returns {Promise<*>}
+     */
+    setAdmin: async (req, res) => {
+        try {
+            const companyid = req.params.CompanyID;
+            const { AdminID } = req.body;
+            if (!companyid) {
+                return res.status(404).json({ message: 'Company not found' });
+            }
+            const company = await companyService.setAdmin(companyid, AdminID);
+            res.status(200).json(company);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
 
     /**
      * Handle delete company

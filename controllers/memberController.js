@@ -70,15 +70,14 @@ const MemberController = {
      */
     isPasswordValid: async (req, res) => {
         try {
-            const memberId = req.params.MemberID;
-            const { Password } = req.body;
-            if (!memberId) {
+            const {Email, Password} = req.body;
+            if (!Email) {
                 return res.status(404).json({ message: 'Member not found' });
             }
             if (!Password) {
                 return res.status(400).json({ message: 'Password is required' });
             }
-            const member = await MemberService.isPasswordValid(memberId, Password);
+            const member = await MemberService.isPasswordValid(Email, Password);
             if (!member) {
                 return res.status(401).json({ message: 'Invalid password' });
             }

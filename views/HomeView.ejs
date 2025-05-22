@@ -61,8 +61,8 @@
             <a href="#home" class="nav-link text-gray-700 font-medium">Home</a>
             <a href="#features" class="nav-link text-gray-700 font-medium">Features</a>
             <a href="#feedbacks" class="nav-link text-gray-700 font-medium">Feedbacks</a>
-            <a href="login.html" class="nav-link text-gray-700 font-medium">Login</a>
-            <a href="register-company.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition duration-150 cta-button">
+            <a href="/ui/login" class="nav-link text-gray-700 font-medium">Login</a>
+            <a href="/ui/signup" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition duration-150 cta-button">
                 Get Started
             </a>
         </div>
@@ -76,8 +76,8 @@
         <a href="#home" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Home</a>
         <a href="#features" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Features</a>
         <a href="#feedbacks" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Feedbacks</a>
-        <a href="login.html" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Login</a>
-        <a href="register-company.html" class="block mx-4 my-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-center font-medium hover:bg-indigo-700 transition duration-150">
+        <a href="/ui/login" class="block px-6 py-2 text-gray-700 hover:bg-indigo-50">Login</a>
+        <a href="/ui/signup" class="block mx-4 my-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-center font-medium hover:bg-indigo-700 transition duration-150">
             Get Started
         </a>
     </div>
@@ -91,7 +91,7 @@
         <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto text-indigo-100">
             TaskFlow is the intuitive and collaborative project management tool designed to boost your team's productivity and bring clarity to your projects.
         </p>
-        <a href="register-company.html" class="bg-white text-indigo-700 font-semibold px-8 py-4 rounded-lg shadow-lg text-lg hover:bg-indigo-50 transition duration-150 cta-button">
+        <a href="/ui/signup" class="bg-white text-indigo-700 font-semibold px-8 py-4 rounded-lg shadow-lg text-lg hover:bg-indigo-50 transition duration-150 cta-button">
             Get Started for Free
         </a>
         <p class="text-sm mt-4 text-indigo-200">No credit card required.</p>
@@ -175,7 +175,7 @@
         <p class="text-indigo-200 max-w-xl mx-auto mb-10">
             Join thousands of teams who trust TaskFlow to deliver projects on time and on budget.
         </p>
-        <a href="register-company.html" class="bg-white text-indigo-700 font-semibold px-10 py-4 rounded-lg shadow-lg text-lg hover:bg-indigo-50 transition duration-150 cta-button">
+        <a href= "/ui/signup" class="bg-white text-indigo-700 font-semibold px-10 py-4 rounded-lg shadow-lg text-lg hover:bg-indigo-50 transition duration-150 cta-button">
             Sign Up Now
         </a>
     </div>
@@ -195,23 +195,19 @@
 </footer>
 
 <script>
-    // Mobile menu toggle
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     mobileMenuBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('hidden');
     });
 
-    // Smooth scroll for nav links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
-            // Close mobile menu if open
             if (!mobileMenu.classList.contains('hidden')) {
                 mobileMenu.classList.add('hidden');
             }
-            // Scroll to target
             if (targetId === "#") {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
