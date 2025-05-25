@@ -1,261 +1,664 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - TaskFlow</title>
+
+    <title>Dashboard - CMS</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+
         body {
+
             font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
+
         }
-        .sidebar {
-            background-color: #ffffff;
-            border-right: 1px solid #e9ecef;
-        }
-        .sidebar-link {
-            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-            border-radius: 0.375rem;
-        }
-        .sidebar-link:hover, .sidebar-link.active {
-            background-color: #e9ecef;
-            color: #000000;
-        }
-        .sidebar-link i {
-            width: 20px;
-            text-align: center;
-        }
+
         .stat-card {
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            border: 1px solid #e9ecef;
-            padding: 1.5rem;
+
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
         }
+
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+
+            transform: translateY(-5px);
+
+            box-shadow: 0 10px 20px rgba(0,0,0,0.07);
+
         }
-        .task-status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
-        .status-in-progress { background-color: #e0f2fe; color: #0284c7; }
-        .status-pending { background-color: #fef9c3; color: #ca8a04; }
-        .status-completed { background-color: #dcfce7; color: #16a34a; }
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #6366f1;
-            color: white;
+
+        .loading-spinner-container {
+
             display: flex;
-            align-items: center;
+
             justify-content: center;
-            font-weight: 500;
+
+            align-items: center;
+
+            min-height: 200px;
+
         }
-        .header-bar {
-            background-color: #ffffff;
-            border-bottom: 1px solid #e9ecef;
+
+        .loading-spinner {
+
+            border: 4px solid #f3f3f3; /* Light grey */
+
+            border-top: 4px solid #3b82f6; /* Blue-500 */
+
+            border-radius: 50%;
+
+            width: 50px;
+
+            height: 50px;
+
+            animation: spin 1s linear infinite;
+
         }
-        .main-content h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #343a40;
+
+        @keyframes spin {
+
+            0% { transform: rotate(0deg); }
+
+            100% { transform: rotate(360deg); }
+
+        }
+
+        .message-area {
+
+            padding: 0.75rem;
+
             margin-bottom: 1rem;
+
+            border-radius: 0.375rem;
+
+            font-size: 0.875rem;
+
         }
-        .card-container {
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            border: 1px solid #e9ecef;
-            padding: 1.5rem;
+
+        .message-error {
+
+            background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;
+
         }
+
         .task-item:hover, .member-item:hover {
-            background-color: #f8f9fa;
+
+            background-color: #f9fafb; /* Gray-50 */
+
         }
-        .avatar-initials {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #e0e7ff;
-            color: #4338ca;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
+
+        /* Status badge styles aligned with DB ENUM */
+
+        .status-pending { background-color: #fef3c7; color: #92400e; } /* Amber-100, Amber-700 */
+
+        .status-in-progress { background-color: #dbeafe; color: #1e40af; } /* Blue-100, Blue-800 */
+
+        .status-completed { background-color: #d1fae5; color: #065f46; } /* Green-100, Green-700 */
+
+
+
+        .priority-1 { color: #ef4444; } /* Red-500 (High) */
+
+        .priority-2 { color: #f59e0b; } /* Amber-500 (Medium) */
+
+        .priority-3 { color: #22c55e; } /* Green-500 (Low) */
 
     </style>
+
 </head>
-<body class="bg-gray-50">
 
-<div class="flex h-screen">
-    <aside class="sidebar w-64 p-6 hidden sm:block">
-        <div class="flex items-center mb-10">
-            <img src="https://via.placeholder.com/32" alt="TaskFlow Logo" class="mr-3">
-            <h1 class="text-2xl font-bold text-gray-800">TaskFlow</h1>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-6 lg:p-8">
+
+<div class="container mx-auto">
+
+    <header class="mb-8 flex justify-between items-center">
+
+        <div>
+
+            <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+
+            <p class="text-gray-600">Welcome back, <span id="userName" class="font-semibold">User</span>!</p> </div>
+
+    </header>
+
+
+
+    <div id="globalMessage" class="message-area hidden"></div>
+
+    <div id="loadingIndicatorPage" class="loading-spinner-container"><div class="loading-spinner"></div></div>
+
+
+
+    <div id="dashboardContent" class="hidden">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+            <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+
+                <div class="flex items-center">
+
+                    <div class="p-4 bg-blue-100 rounded-full mr-4">
+
+                        <i class="fas fa-project-diagram fa-xl text-blue-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p class="text-sm text-gray-500">Total Projects</p>
+
+                        <p id="totalProjectsStat" class="text-3xl font-semibold text-gray-800">0</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+
+                <div class="flex items-center">
+
+                    <div class="p-4 bg-yellow-100 rounded-full mr-4">
+
+                        <i class="fas fa-tasks fa-xl text-yellow-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p class="text-sm text-gray-500">Active Tasks</p>
+
+                        <p id="activeTasksStat" class="text-3xl font-semibold text-gray-800">0</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+
+                <div class="flex items-center">
+
+                    <div class="p-4 bg-teal-100 rounded-full mr-4">
+
+                        <i class="fas fa-users fa-xl text-teal-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p class="text-sm text-gray-500">Team Members</p>
+
+                        <p id="totalMembersStat" class="text-3xl font-semibold text-gray-800">0</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+
+                <div class="flex items-center">
+
+                    <div class="p-4 bg-red-100 rounded-full mr-4">
+
+                        <i class="fas fa-calendar-times fa-xl text-red-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p class="text-sm text-gray-500">Upcoming Deadlines (7d)</p>
+
+                        <p id="upcomingDeadlinesStat" class="text-3xl font-semibold text-gray-800">0</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
-        <nav class="space-y-3">
-            <a href="#" class="sidebar-link active flex items-center p-3 text-gray-700 font-medium">
-                <i class="fas fa-tachometer-alt mr-4"></i> Dashboard
-            </a>
-            <a href="#" class="sidebar-link flex items-center p-3 text-gray-600 hover:text-gray-900">
-                <i class="fas fa-tasks mr-4"></i> Tasks
-            </a>
-            <a href="#" class="sidebar-link flex items-center p-3 text-gray-600 hover:text-gray-900">
-                <i class="fas fa-calendar-alt mr-4"></i> Calendar
-            </a>
-            <a href="#" class="sidebar-link flex items-center p-3 text-gray-600 hover:text-gray-900">
-                <i class="fas fa-users mr-4"></i> Team Members
-            </a>
-            <a href="#" class="sidebar-link flex items-center p-3 text-gray-600 hover:text-gray-900">
-                <i class="fas fa-cog mr-4"></i> Settings
-            </a>
-        </nav>
-        <div class="absolute bottom-6 left-6">
-            <button class="w-full bg-red-50 hover:bg-red-100 text-red-600 p-3 rounded-md flex items-center">
-                <i class="fas fa-sign-out-alt mr-3"></i> Logout
-            </button>
+
+
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-xl">
+
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-3">Recent Active Tasks</h2>
+
+                <div id="recentTasksList" class="space-y-3 max-h-96 overflow-y-auto">
+
+                    <p id="noRecentTasksMessage" class="text-gray-500 text-sm hidden">No active tasks found.</p>
+
+                </div>
+
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-xl">
+
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-3">Team Overview</h2>
+
+                <div id="teamOverviewList" class="space-y-3 max-h-96 overflow-y-auto">
+
+                    <p id="noTeamMembersMessage" class="text-gray-500 text-sm hidden">No team members found.</p>
+
+                </div>
+
+            </div>
+
         </div>
-    </aside>
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <header class="header-bar p-6 flex justify-between items-center">
-            <div>
-                <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
-                <p class="text-sm text-gray-500">Welcome back, <%= user.name %>!</p>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="text-gray-500 hover:text-gray-800">
-                    <i class="fas fa-bell fa-lg"></i>
-                </button>
-                <div class="avatar-initials cursor-pointer">
-                    <%= user.initials %>
-                </div>
-            </div>
-        </header>
+    </div> </div>
 
-        <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="stat-card">
-                    <h3 class="text-sm font-medium text-gray-500 mb-1">Total Tasks</h3>
-                    <div class="flex items-baseline">
-                        <span class="text-4xl font-bold text-gray-900"><%= totalTasks %></span>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1"><%= completedTasks %> Completed</p>
-                </div>
-                <div class="stat-card">
-                    <h3 class="text-sm font-medium text-gray-500 mb-1">Team Members</h3>
-                    <div class="flex items-baseline">
-                        <span class="text-4xl font-bold text-gray-900"><%= teamMembersCount %></span>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">Across all projects</p>
-                </div>
-                <div class="stat-card">
-                    <h3 class="text-sm font-medium text-gray-500 mb-1">Upcoming Deadlines</h3>
-                    <div class="flex items-baseline">
-                        <span class="text-4xl font-bold text-gray-900"><%= upcomingDeadlines %></span>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">In the next 7 days</p>
-                </div>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 card-container">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-semibold text-gray-800">Recent Tasks</h2>
-                        <a href="#" class="text-sm font-medium text-blue-600 hover:underline">View All</a>
-                    </div>
-                    <div class="space-y-4">
-                        <% if (recentTasks && recentTasks.length > 0) { %>
-                            <% recentTasks.forEach(task => { %>
-                                <div class="task-item flex justify-between items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900"><%= task.Title %></h4>
-                                        <p class="text-xs text-gray-500">Due: <%= task.formattedDate %></p>
-                                    </div>
-                                    <span class="task-status status-<%= task.Status.toLowerCase().replace(' ', '-') %>">
-                                        <%= task.Status %>
-                                    </span>
-                                </div>
-                            <% }); %>
-                        <% } else { %>
-                            <p class="text-gray-500 text-center p-5">No recent tasks available.</p>
-                        <% } %>
-                    </div>
-                </div>
-
-                <div class="card-container">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-semibold text-gray-800">Team Members</h2>
-                        <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Manage</a>
-                    </div>
-                    <div class="space-y-4">
-                        <% if (teamList && teamList.length > 0) { %>
-                            <% teamList.forEach(member => { %>
-                                <div class="member-item flex items-center p-2.5 rounded-lg hover:bg-gray-50">
-                                    <div class="avatar-initials mr-4"><%= member.initials %></div>
-                                    <div>
-                                        <p class="font-medium text-gray-900"><%= member.Name %></p>
-                                        <p class="text-xs text-gray-500"><%= member.Position || 'Member' %></p>
-                                    </div>
-                                </div>
-                            <% }); %>
-                        <% } else { %>
-                            <p class="text-gray-500 text-center p-5">No team members found.</p>
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-</div>
 
 <script>
-    const user = { name: 'Sarah Johnson', initials: 'SJ' };
-    const totalTasks = 24;
-    const completedTasks = 12;
-    const teamMembersCount = 8;
-    const upcomingDeadlines = 5;
-    const recentTasks = [
-        { Title: 'Update landing page', formattedDate: 'Jan 15, 2025', Status: 'In Progress' },
-        { Title: 'User research', formattedDate: 'Jan 20, 2025', Status: 'Pending' },
-        { Title: 'Deploy V2.1', formattedDate: 'Jan 10, 2025', Status: 'Completed' },
-        { Title: 'Design new icons', formattedDate: 'Jan 18, 2025', Status: 'Pending' },
-    ];
-    const teamList = [
-        { Name: 'Sarah Johnson', Position: 'Project Manager', initials: 'SJ' },
-        { Name: 'Mike Williams', Position: 'Developer', initials: 'MW' },
-        { Name: 'Alex Peterson', Position: 'Designer', initials: 'AP' },
-        { Name: 'Chris Lee', Position: 'Developer', initials: 'CL' },
-    ];
 
-    function getInitials(name) {
-        if (!name || typeof name !== 'string') return '?';
-        const parts = name.trim().split(' ');
-        if (parts.length === 1 && parts[0].length > 0) return parts[0].substring(0, 2).toUpperCase();
-        if (parts.length > 1) {
-            return (parts[0][0] + (parts[parts.length - 1][0] || '')).toUpperCase();
-        }
-        return name.substring(0, 2).toUpperCase() || '?';
+    const API_BASE_URL = '/api';
+
+
+
+    // DOM Elements
+
+    const loadingIndicatorPage = document.getElementById('loadingIndicatorPage');
+
+    const globalMessage = document.getElementById('globalMessage');
+
+    const dashboardContent = document.getElementById('dashboardContent');
+
+    const userNameDisplay = document.getElementById('userName');
+
+
+
+    const totalProjectsStat = document.getElementById('totalProjectsStat');
+
+    const activeTasksStat = document.getElementById('activeTasksStat');
+
+    const totalMembersStat = document.getElementById('totalMembersStat');
+
+    const upcomingDeadlinesStat = document.getElementById('upcomingDeadlinesStat');
+
+
+
+    const recentTasksList = document.getElementById('recentTasksList');
+
+    const noRecentTasksMessage = document.getElementById('noRecentTasksMessage');
+
+    const teamOverviewList = document.getElementById('teamOverviewList');
+
+    const noTeamMembersMessage = document.getElementById('noTeamMembersMessage');
+
+
+
+    // --- Authentication Placeholder ---
+
+    function getAuthToken() {
+
+// return localStorage.getItem('authToken');
+
+        return 'dummy-auth-token-user123'; // Placeholder
+
+    }
+
+    function getUserDataFromSession() {
+
+// const userDataString = localStorage.getItem('userData');
+
+// return userDataString ? JSON.parse(userDataString) : { name: 'User', memberId: null, companyId: null };
+
+        return { name: 'Demo User', memberId: 1, companyId: 1 }; // Placeholder
+
+    }
+
+
+
+    // --- Utility Functions ---
+
+    function showGlobalMessage(message, type = 'error') {
+
+        globalMessage.textContent = message;
+
+        globalMessage.className = `message-area ${type === 'success' ? 'message-success' : 'message-error'}`;
+
+        globalMessage.classList.remove('hidden');
+
+        setTimeout(() => globalMessage.classList.add('hidden'), 7000);
+
+    }
+
+    function getStatusClass(status) {
+
+        if (status === 'In Progress') return 'status-in-progress';
+
+        if (status === 'Completed') return 'status-completed';
+
+        if (status === 'Pending') return 'status-pending';
+
+        return 'bg-gray-200 text-gray-800';
+
+    }
+
+    function getPriorityClass(priority) { // Priority is '1', '2', or '3'
+
+        if (priority === '1') return 'priority-1'; // High
+
+        if (priority === '2') return 'priority-2'; // Medium
+
+        if (priority === '3') return 'priority-3'; // Low
+
+        return '';
+
+    }
+
+    function getPriorityText(priority) {
+
+        if (priority === '1') return 'High';
+
+        if (priority === '2') return 'Medium';
+
+        if (priority === '3') return 'Low';
+
+        return priority;
+
     }
 
     function formatDateShort(dateString) {
+
         if (!dateString) return 'N/A';
+
         const date = new Date(dateString);
-        return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+
+        if (isNaN(date.getTime())) return 'Invalid Date';
+
+        return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
     }
 
+    function getInitials(name) {
+
+        if (!name || typeof name !== 'string') return '?';
+
+        const parts = name.trim().split(' ');
+
+        if (parts.length === 1 && parts[0].length > 0) return parts[0].substring(0, 2).toUpperCase();
+
+        if (parts.length > 1) {
+
+            return (parts[0][0] + (parts[parts.length - 1][0] || '')).toUpperCase();
+
+        }
+
+        return name.substring(0, 2).toUpperCase() || '?';
+
+    }
+
+
+
+
+
+    // --- Data Fetching and Processing ---
+
+    async function fetchDashboardData() {
+
+        loadingIndicatorPage.classList.remove('hidden');
+
+        dashboardContent.classList.add('hidden');
+
+        const token = getAuthToken();
+
+        const headers = { 'Authorization': `Bearer ${token}` };
+
+
+
+        try {
+
+            const [projectsResponse, tasksResponse, membersResponse] = await Promise.all([
+
+                fetch(`${API_BASE_URL}/projects`, { headers }),
+
+                fetch(`${API_BASE_URL}/tasks`, { headers }),
+
+                fetch(`${API_BASE_URL}/members`, { headers })
+
+            ]);
+
+
+
+            if (!projectsResponse.ok) throw new Error(`Projects: ${projectsResponse.statusText}`);
+
+            if (!tasksResponse.ok) throw new Error(`Tasks: ${tasksResponse.statusText}`);
+
+            if (!membersResponse.ok) throw new Error(`Members: ${membersResponse.statusText}`);
+
+
+
+            const projectsData = (await projectsResponse.json()).projects || (await projectsResponse.json());
+
+            const tasksData = (await tasksResponse.json()).tasks || (await tasksResponse.json());
+
+            const membersData = (await membersResponse.json()).members || (await membersResponse.json());
+
+
+
+            populateDashboard(projectsData, tasksData, membersData);
+
+            dashboardContent.classList.remove('hidden');
+
+
+
+        } catch (error) {
+
+            console.error('Error fetching dashboard data:', error);
+
+            showGlobalMessage(`Error loading dashboard: ${error.message}`);
+
+        } finally {
+
+            loadingIndicatorPage.classList.add('hidden');
+
+        }
+
+    }
+
+
+
+    function populateDashboard(projects, tasks, members) {
+
+// Update Summary Stats
+
+        totalProjectsStat.textContent = projects.length;
+
+
+
+        const activeTasks = tasks.filter(task => task.Status === 'Pending' || task.Status === 'In Progress');
+
+        activeTasksStat.textContent = activeTasks.length;
+
+
+
+        totalMembersStat.textContent = members.length;
+
+
+
+        const today = new Date();
+
+        const sevenDaysFromNow = new Date();
+
+        sevenDaysFromNow.setDate(today.getDate() + 7);
+
+
+
+        const upcomingTaskDeadlines = tasks.filter(task =>
+
+            task.Deadline &&
+
+            new Date(task.Deadline) >= today &&
+
+            new Date(task.Deadline) <= sevenDaysFromNow &&
+
+            task.Status !== 'Completed'
+
+        ).length;
+
+// Consider project EndDate as well if needed for "upcoming deadlines"
+
+        const upcomingProjectDeadlines = projects.filter(project =>
+
+            project.EndDate &&
+
+            new Date(project.EndDate + 'T00:00:00') >= today &&
+
+            new Date(project.EndDate + 'T00:00:00') <= sevenDaysFromNow &&
+
+            project.Status !== 'Completed'
+
+        ).length;
+
+        upcomingDeadlinesStat.textContent = upcomingTaskDeadlines + upcomingProjectDeadlines;
+
+
+
+
+
+// Populate Recent Active Tasks (e.g., top 5 by TimeStamp or Priority)
+
+        recentTasksList.innerHTML = '';
+
+        const sortedActiveTasks = activeTasks
+
+            .sort((a, b) => new Date(b.TimeStamp) - new Date(a.TimeStamp)) // Sort by most recent TimeStamp
+
+            .slice(0, 5); // Get top 5
+
+
+
+        if (sortedActiveTasks.length > 0) {
+
+            noRecentTasksMessage.classList.add('hidden');
+
+            sortedActiveTasks.forEach(task => {
+
+                const taskElement = document.createElement('div');
+
+                taskElement.className = 'task-item flex justify-between items-center p-3 border-b border-gray-200 last:border-b-0';
+
+                taskElement.innerHTML = `
+
+<div>
+
+<h4 class="font-medium text-gray-800 text-sm">${task.Title}</h4>
+
+<p class="text-xs text-gray-500">Project: ${getProjectName(task.ProjectID, projects)} | Due: ${formatDateShort(task.Deadline)}</p>
+
+</div>
+
+<div class="flex items-center space-x-2">
+
+<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${getStatusClass(task.Status)}">${task.Status}</span>
+
+<i class="fas fa-circle text-xs ${getPriorityClass(task.Priority)}" title="Priority: ${getPriorityText(task.Priority)}"></i>
+
+</div>
+
+`;
+
+                recentTasksList.appendChild(taskElement);
+
+            });
+
+        } else {
+
+            noRecentTasksMessage.classList.remove('hidden');
+
+        }
+
+
+
+// Populate Team Overview (e.g., first 5 members)
+
+        teamOverviewList.innerHTML = '';
+
+        const teamSample = members.slice(0, 5);
+
+        if (teamSample.length > 0) {
+
+            noTeamMembersMessage.classList.add('hidden');
+
+            teamSample.forEach(member => {
+
+                const memberElement = document.createElement('div');
+
+                memberElement.className = 'member-item flex items-center p-2.5';
+
+                memberElement.innerHTML = `
+
+<div class="avatar-initials w-10 h-10 text-sm mr-3 flex-shrink-0">${getInitials(member.Name)}</div>
+
+<div>
+
+<p class="font-medium text-gray-800 text-sm">${member.Name}</p>
+
+<p class="text-xs text-gray-500">${member.Position || 'N/A'}</p>
+
+</div>
+
+`;
+
+                teamOverviewList.appendChild(memberElement);
+
+            });
+
+        } else {
+
+            noTeamMembersMessage.classList.remove('hidden');
+
+        }
+
+    }
+
+
+
+    function getProjectName(projectId, projectsList) { // Pass projects list to avoid global dependency
+
+        const project = projectsList.find(p => p.ProjectID == projectId);
+
+        return project ? project.Name : `ID ${projectId}`;
+
+    }
+
+
+
+
+
+    // --- Initial Load ---
+
     document.addEventListener('DOMContentLoaded', () => {
-        console.log("Dashboard loaded with EJS (simulated).");
+
+        const userData = getUserDataFromSession();
+
+        userNameDisplay.textContent = userData.name || 'User';
+ fetchDashboardData();
+
     });
+
 </script>
+
 </body>
+
 </html>
