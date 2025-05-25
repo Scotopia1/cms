@@ -4,7 +4,6 @@ const CompanyRepository = require('./companyRepository');
 const Utils = require('../Utils/utils');
 
 const MemberRepository = {
-
     /**
      * Fetch all members by company ID
      * @param companyId
@@ -58,20 +57,38 @@ const MemberRepository = {
      */
     isPasswordValid: async (Email, password) => {
         try {
-            if(!(await this.MemberExistsbyEmail(Email))){
+            if (!(await MemberRepository.MemberExistsbyEmail(Email))) {
                 return {
+                    success: false,
                     message: 'Member does not exist'
-                }
+                };
             }
+
             const sql = `SELECT Password FROM member WHERE Email = ?`;
             const rows = await db.query(sql, [Email]);
+
             if (rows.length === 0) {
-                return false;
+                return {
+                    success: false,
+                    message: 'Internal error: Could not retrieve member details.'
+                };
             }
+
             const hashedPassword = rows[0].Password;
-            return await Utils.comparePassword(password, hashedPassword);
+            const isValid = await Utils.comparePassword(password, hashedPassword);
+
+            return {
+                success: isValid,
+                message: isValid ? 'Password is valid' : 'Password is invalid'
+            };
+
         } catch (error) {
-            throw new Error(`Error validating password for member with ID ${Email}: ${error.message}`);
+            console.error(`Error validating password for member with ID ${Email}: ${error.message}`);
+            return {
+                success: false,
+                message: `An unexpected error occurred during password validation.`,
+                error: error.message
+            };
         }
     },
 
@@ -83,13 +100,13 @@ const MemberRepository = {
     createMember: async (member) => {
         try{
 
-            if (!(await CompanyRepository.companyExists(member.CompanyID))) {
+            if (!(await CompanyRepository.companyExistsbyId(member.CompanyID))) {
                 return {
                     message: 'Company does not exist'
                 }
             }
 
-            if (await this.MemberExistsbyName(member.Name, member.CompanyID)) {
+            if (await MemberRepository.MemberExistsbyName(member.Name, member.CompanyID)) {
                 return {
                     message: 'Member already exists'
                 }

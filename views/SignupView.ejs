@@ -124,74 +124,188 @@
             Position: document.getElementById('adminPosition').value,
         };
 
-        console.log("Creating company...");
-
-        const createcompany = await fetch('../api/company/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: {
-                Name: companyData.Name,
-                Location: companyData.Location,
-                ContactInfo: companyData.ContactInfo,
-                Industry: companyData.Industry,
-                Website: companyData.Website,
-            },
-        });
-        console.log("new company created!");
-
-        const newCompany = await fetch('../api/cms/companies', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log("new company get!");
-
-        let companyId;
-
-        for (let i = 0; i < newCompany.length; i++) {
-            if (newCompany[i].Name === companyData.Name) {
-                companyId = newCompany[i].CompanyID;
-            }
+        // Basic client-side validation
+        if (!companyData.Name || !adminUserData.Name || !adminUserData.Email || !adminUserData.Password || !adminUserData.Position) {
+            messageBox.textContent = 'Please fill in all required fields marked with *.';
+            messageBox.className += ' text-red-500';
+            registerButton.disabled = false;
+            registerButton.innerHTML = '<i class="fas fa-user-plus mr-2"></i>Create Account';
+            return;
         }
 
-        const createAdminUser = await fetch('../api/cms/company/members', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'CompanyID': companyId,
-            },
-            body: {
-                Name: adminUserData.Name,
-                Email: adminUserData.Email,
-                Password: adminUserData.Password,
-                Position: adminUserData.Position,
-            },
-        });
-        console.log("new admin user created!");
+        try {
+            // --- 1. Create Company ---
+            console.log("Creating company...");
+            const companyHeaders = new Headers();
+            companyHeaders.append("Content-Type", "application/json");
 
-        const newAdminUser = await fetch('../api/cms/company/members', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'name': adminUserData.Name,
-            },
-        });
-        console.log("new admin user get!");
+            const companyRaw = JSON.stringify(companyData);
 
-        const applyAdminUser = await fetch('../api/cms/companies/set-admin/', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'CompanyID': companyId,
-            },
-            body: {
-                AdminID: newAdminUser[0].MemberID,
-            },
-        });
-        console.log("new admin user set!");
+            const createCompanyRequestOptions = {
+                method: "POST",
+                headers: companyHeaders,
+                body: companyRaw,
+                redirect: "follow"
+            };
+
+            const createCompanyResponse = await fetch('http://localhost:3300/api/cms/companies', createCompanyRequestOptions);
+            const companyResult = await createCompanyResponse.json();
+
+            if (!createCompanyResponse.ok) {
+                throw new Error(`Company creation failed: ${companyResult.message || `HTTP ${createCompanyResponse.status}`}`);
+            }
+
+            console.log("Company created successfully!");
+
+            // --- 2. Get Company ID ---
+            console.log("Fetching companies list...");
+            const getCompaniesResponse = await fetch("http://localhost:3300/api/cms/companies/", {
+                method: "GET",
+                redirect: "follow"
+            });
+
+            if (!getCompaniesResponse.ok) {
+                throw new Error(`Failed to fetch companies: HTTP ${getCompaniesResponse.status}`);
+            }
+            console.log('PETERRR', getCompaniesResponse);
+            const companiesList = await getCompaniesResponse.json();
+            console.log("Fetched companies:", companiesList);
+
+            // Find the new company by name
+            const newCompany = companiesList.find(c =>
+                (c.Name === companyData.Name) ||
+                (c.Name && c.Name.Name === companyData.Name)
+            );
+
+            console.log("New company found PETERRR 22:", newCompany.Name.CompanyID);
+            let companyId;
+            if (newCompany && newCompany.Name && newCompany.Name.CompanyID) {
+                companyId = parseInt(newCompany.Name.CompanyID, 10); // Parse as integer
+            } else if (newCompany && newCompany.CompanyID) {
+                companyId = parseInt(newCompany.CompanyID, 10); // Parse as integer
+            } else if (companyResult && companyResult.CompanyID) {
+                companyId = parseInt(companyResult.CompanyID, 10); // Parse as integer
+            } else {
+                throw new Error('Company created but CompanyID could not be determined');
+            }
+
+            console.log(`Company ID found: ${companyId}`);
+
+            // --- 2. Create Admin User ---
+            console.log("Creating admin user...");
+            const adminUserHeaders = new Headers();
+            adminUserHeaders.append("Content-Type", "application/json");
+            adminUserHeaders.append("CompanyID", companyId); // Add CompanyID to header
+
+            const adminUserRaw = JSON.stringify(adminUserData);
+
+            const createAdminUserRequestOptions = {
+                method: "POST",
+                headers: adminUserHeaders,
+                body: adminUserRaw,
+                redirect: "follow"
+            };
+
+            const createAdminUserResponse = await fetch(`http://localhost:3300/api/cms/company/members/${companyId}`, createAdminUserRequestOptions);
+            const adminResult = await createAdminUserResponse.json();
+
+            if (!createAdminUserResponse.ok) {
+                throw new Error(`Admin user creation failed: ${adminResult.message || `HTTP ${createAdminUserResponse.status}`}`);
+            }
+
+            const GetAdminHeaders = new Headers();
+            GetAdminHeaders.append("Content-Type", "application/json");
+
+            const GetAdminraw = JSON.stringify({
+                "CompanyID": 1
+            });
+
+            const getAdminUserRequest = {
+                method: "GET",
+                headers: GetAdminHeaders,
+                body: GetAdminraw,
+                redirect: "follow"
+            };
+
+            // Correctly fetch admin user data
+            const getAdminUserResponse = await fetch(`http://localhost:3300/api/cms/company/members/${companyId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                // Remove body from GET request
+                redirect: "follow"
+            });
+
+            if (!getAdminUserResponse.ok) {
+                throw new Error(`Failed to fetch admin users: HTTP ${getAdminUserResponse.status}`);
+            }
+
+            // Parse the JSON response
+            const adminUsersList = await getAdminUserResponse.json();
+            console.log("Admin users list:", adminUsersList);
+
+            // Find the admin user by email
+            let adminMemberId;
+
+            if (Array.isArray(adminUsersList)) {
+                // If response is an array, find the matching admin
+                const adminUser = adminUsersList.find(user => user.Email === adminUserData.Name.Email);
+                if (adminUser) {
+                    adminMemberId = adminUser.Name.MemberID;
+                }
+            } else if (adminUsersList && adminUsersList.Name.Email === adminUserData.Name.Email) {
+                // If response is a single object
+                adminMemberId = adminUsersList.Name.MemberID;
+            }
+
+            if (!adminMemberId) {
+                throw new Error('Admin user created, but no MemberID could be determined');
+            }
+            console.log(`Admin user ID found: ${adminMemberId}`);
+
+            if (!adminMemberId) {
+                throw new Error('Admin user created, but no MemberID received.');
+            }
+            console.log(`Admin user created. ID: ${adminMemberId}`);
+
+            // --- 3. Set Company Admin ---
+            console.log("Setting company admin...");
+            const setAdminHeaders = new Headers();
+            setAdminHeaders.append("Content-Type", "application/json");
+
+            const setAdminRaw = JSON.stringify({AdminID: adminMemberId});
+
+            const setAdminRequestOptions = {
+                method: "PUT",
+                headers: setAdminHeaders,
+                body: setAdminRaw,
+                redirect: "follow"
+            };
+
+            const setAdminResponse = await fetch(`http://localhost:3300/api/cms/companies/set-admin/${companyId}`, setAdminRequestOptions);
+            const setAdminResult = await setAdminResponse.json();
+
+            if (!setAdminResponse.ok) {
+                throw new Error(`Setting admin failed: ${setAdminResult.message || `HTTP ${setAdminResponse.status}`}`);
+            }
+            console.log("Admin user set successfully!");
+
+            // --- Success ---
+            messageBox.textContent = 'Company and admin account registered successfully! Redirecting to login...';
+            messageBox.className = 'mt-6 text-center text-sm text-green-500';
+            setTimeout(() => {
+                window.location.href = '../ui/login'; // Adjust path if necessary
+            }, 3000);
+
+        } catch (error) {
+            console.error('Registration process error:', error);
+            messageBox.textContent = `Registration failed: ${error.message}`;
+            messageBox.className = 'mt-6 text-center text-sm text-red-500';
+        } finally {
+            registerButton.disabled = false;
+            registerButton.innerHTML = '<i class="fas fa-user-plus mr-2"></i>Create Account';
+        }
     });
 </script>
 </body>

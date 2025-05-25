@@ -52,7 +52,7 @@ const CompanyRepository = {
      */
     create: async (company) => {
         try {
-            if (await this.companyExists(company.Name)) {
+            if (await CompanyRepository.companyExists(company.Name)) {
                 return {
                     message: 'Company already exists'
                 }
@@ -105,7 +105,7 @@ const CompanyRepository = {
      */
     setAdmin: async (companyID, userID) => {
         try {
-            const sql = `UPDATE company SET AdminID = ? WHERE CompanyID = ?`;
+            const sql = `UPDATE company SET Admin = ? WHERE CompanyID = ?`;
             const { affectedRows } = await db.query(sql, [userID, companyID]);
             return {
                 affectedRows
@@ -145,7 +145,23 @@ const CompanyRepository = {
         } catch (error) {
             throw new Error(`Error checking if company exists: ${error.message}`);
         }
+    },
+
+    /**
+     * Checks if a company exists in the database by its name.
+     * @param name
+     * @returns {Promise<boolean>}
+     */
+    companyExistsbyId: async (CompanyID) => {
+        try {
+            const sql = `SELECT * FROM company WHERE CompanyID = ?`;
+            const rows = await db.query(sql, [CompanyID]);
+            return rows.length > 0;
+        } catch (error) {
+            throw new Error(`Error checking if company exists: ${error.message}`);
+        }
     }
+
 }
 
 module.exports = CompanyRepository;

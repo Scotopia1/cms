@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TaskFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            border-right: 1px solid #e9ecef;
+        }
+        .sidebar-link {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            border-radius: 0.375rem;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: #e9ecef;
+            color: #000000;
+        }
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+        .stat-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            border: 1px solid #e9ecef;
+            padding: 1.5rem;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+        }
+        .task-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .status-in-progress { background-color: #e0f2fe; color: #0284c7; }
+        .status-pending { background-color: #fef9c3; color: #ca8a04; }
+        .status-completed { background-color: #dcfce7; color: #16a34a; }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #6366f1;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        .header-bar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .main-content h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 1rem;
+        }
+        .card-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            border: 1px solid #e9ecef;
+            padding: 1.5rem;
+        }
+        .task-item:hover, .member-item:hover {
+            background-color: #f8f9fa;
+        }
+        .avatar-initials {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e0e7ff;
+            color: #4338ca;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<div class="flex h-screen">
+    <aside class="sidebar w-64 p-6 hidden sm:block">
+        <div class="flex items-center mb-10">
+            <img src="https://via.placeholder.com/32" alt="TaskFlow Logo" class="mr-3">
+            <h1 class="text-2xl font-bold text-gray-800">TaskFlow</h1>
+        </div>
+        <nav class="space-y-3">
+            <a href="#" class="sidebar-link active flex items-center p-3 text-gray-700 font-medium">
+                <i class="fas fa-tachometer-alt mr-4"></i> Dashboard
+            </a>
+            <a href="#" class="sidebar-link flex items-center p-3 text-gray-600 hover:text-gray-900">
+                <i class="fas fa-tasks mr-4"></i> Tasks
+            </a>
+            <a href="#" class="sidebar-link flex items-center p-3 text-gray-600 hover:text-gray-900">
+                <i class="fas fa-calendar-alt mr-4"></i> Calendar
+            </a>
+            <a href="#" class="sidebar-link flex items-center p-3 text-gray-600 hover:text-gray-900">
+                <i class="fas fa-users mr-4"></i> Team Members
+            </a>
+            <a href="#" class="sidebar-link flex items-center p-3 text-gray-600 hover:text-gray-900">
+                <i class="fas fa-cog mr-4"></i> Settings
+            </a>
+        </nav>
+        <div class="absolute bottom-6 left-6">
+            <button class="w-full bg-red-50 hover:bg-red-100 text-red-600 p-3 rounded-md flex items-center">
+                <i class="fas fa-sign-out-alt mr-3"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header class="header-bar p-6 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                <p class="text-sm text-gray-500">Welcome back, <%= user.name %>!</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-500 hover:text-gray-800">
+                    <i class="fas fa-bell fa-lg"></i>
+                </button>
+                <div class="avatar-initials cursor-pointer">
+                    <%= user.initials %>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="stat-card">
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Total Tasks</h3>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold text-gray-900"><%= totalTasks %></span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1"><%= completedTasks %> Completed</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Team Members</h3>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold text-gray-900"><%= teamMembersCount %></span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Across all projects</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Upcoming Deadlines</h3>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold text-gray-900"><%= upcomingDeadlines %></span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">In the next 7 days</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 card-container">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800">Recent Tasks</h2>
+                        <a href="#" class="text-sm font-medium text-blue-600 hover:underline">View All</a>
+                    </div>
+                    <div class="space-y-4">
+                        <% if (recentTasks && recentTasks.length > 0) { %>
+                            <% recentTasks.forEach(task => { %>
+                                <div class="task-item flex justify-between items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
+                                    <div>
+                                        <h4 class="font-medium text-gray-900"><%= task.Title %></h4>
+                                        <p class="text-xs text-gray-500">Due: <%= task.formattedDate %></p>
+                                    </div>
+                                    <span class="task-status status-<%= task.Status.toLowerCase().replace(' ', '-') %>">
+                                        <%= task.Status %>
+                                    </span>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p class="text-gray-500 text-center p-5">No recent tasks available.</p>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="card-container">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800">Team Members</h2>
+                        <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Manage</a>
+                    </div>
+                    <div class="space-y-4">
+                        <% if (teamList && teamList.length > 0) { %>
+                            <% teamList.forEach(member => { %>
+                                <div class="member-item flex items-center p-2.5 rounded-lg hover:bg-gray-50">
+                                    <div class="avatar-initials mr-4"><%= member.initials %></div>
+                                    <div>
+                                        <p class="font-medium text-gray-900"><%= member.Name %></p>
+                                        <p class="text-xs text-gray-500"><%= member.Position || 'Member' %></p>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p class="text-gray-500 text-center p-5">No team members found.</p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    const user = { name: 'Sarah Johnson', initials: 'SJ' };
+    const totalTasks = 24;
+    const completedTasks = 12;
+    const teamMembersCount = 8;
+    const upcomingDeadlines = 5;
+    const recentTasks = [
+        { Title: 'Update landing page', formattedDate: 'Jan 15, 2025', Status: 'In Progress' },
+        { Title: 'User research', formattedDate: 'Jan 20, 2025', Status: 'Pending' },
+        { Title: 'Deploy V2.1', formattedDate: 'Jan 10, 2025', Status: 'Completed' },
+        { Title: 'Design new icons', formattedDate: 'Jan 18, 2025', Status: 'Pending' },
+    ];
+    const teamList = [
+        { Name: 'Sarah Johnson', Position: 'Project Manager', initials: 'SJ' },
+        { Name: 'Mike Williams', Position: 'Developer', initials: 'MW' },
+        { Name: 'Alex Peterson', Position: 'Designer', initials: 'AP' },
+        { Name: 'Chris Lee', Position: 'Developer', initials: 'CL' },
+    ];
+
+    function getInitials(name) {
+        if (!name || typeof name !== 'string') return '?';
+        const parts = name.trim().split(' ');
+        if (parts.length === 1 && parts[0].length > 0) return parts[0].substring(0, 2).toUpperCase();
+        if (parts.length > 1) {
+            return (parts[0][0] + (parts[parts.length - 1][0] || '')).toUpperCase();
+        }
+        return name.substring(0, 2).toUpperCase() || '?';
+    }
+
+    function formatDateShort(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("Dashboard loaded with EJS (simulated).");
+    });
+</script>
+</body>
+</html>

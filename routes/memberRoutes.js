@@ -1,18 +1,18 @@
 const express = require('express');
 const MemberController = require('../controllers/memberController');
-const {validateMember, validateMemberId} = require('../validators/member.dto');
+const {validateMember, validateMemberId, validateMemberCredentials} = require('../validators/member.dto');
 const {validateCompanyId} = require('../validators/company.dto');
 
 const router = express.Router();
 
 // Get requests
-router.get('/:CompanyID', validateCompanyId, MemberController.getAllMembersByCompanyId); // Get all members
-router.get('/name/:name', validateMember, MemberController.getMemberbyName); // Get member by name
-router.get('/details/:MemberID', MemberController.getMemberDetails); // Combine details into one endpoint
-router.get('/password/', validateMemberId, MemberController.isPasswordValid); // Get member by id
+router.get('/:CompanyID', MemberController.getAllMembersByCompanyId);
+router.get('/name/:name', MemberController.getMemberbyName);
+router.get('/details/:MemberID', MemberController.getMemberDetails);
 
 // Post requests
-router.post('/:CompanyID/',validateCompanyId ,validateMember, MemberController.createMember); // Create a member
+router.post('/password', validateMemberCredentials, MemberController.isPasswordValid);
+router.post('/:CompanyID' , validateMember, MemberController.createMember);
 
 // Put requests
 router.put('/:MemberID', validateMember, validateMemberId, MemberController.updateMember); // Update a member

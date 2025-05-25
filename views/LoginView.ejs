@@ -78,6 +78,8 @@
     const messageBox = document.getElementById('messageBox');
 
     loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent default form submission
+
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -85,21 +87,68 @@
             messageBox.innerHTML = '<p class="text-red-500">Please fill in all fields.</p>';
             return;
         }
-        event.preventDefault();
+
         loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
         loginButton.disabled = true;
         messageBox.innerHTML = '';
-        const isValidCredentials = await fetch('api/cms/company/members/', {
-            method: 'GET',
-            body: '{"Email": email, "Password": password},'
-        }).then(response => response.json());
-        if (isValidCredentials) {
-            messageBox.innerHTML = '<p class="text-green-500">Login successful! Redirecting...</p>';
-            setTimeout(() => {
-                window.location.href = '/ui/dashboard';
-            }, 2000);
-        } else {
-            messageBox.innerHTML = '<p class="text-red-500">Invalid email or password.</p>';
+
+        const queryParams = new URLSearchParams({
+            Email: email,
+            Password: password
+        });
+
+        const requestbody = JSON.stringify({
+            "Email": email,
+            "Password": password
+        })
+
+        try {
+            const response = await fetch(`http://localhost:3300/api/cms/company/members/password/`, {
+                method: 'POST', // Changed to POST
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: requestbody, // Correctly pass the stringified JSON
+                redirect: "follow"
+            });
+
+            if (!response.ok) {
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch (e) {
+                    errorData = {message: response.statusText};
+                }
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            let isLoginSuccessful = false;
+
+            if (responseData && typeof responseData.valid === 'boolean') {
+                isLoginSuccessful = responseData.valid;
+            }
+
+            if (isLoginSuccessful) {
+                messageBox.innerHTML = '<p class="text-green-500">Login successful! Redirecting...</p>';
+                setTimeout(() => {
+                    window.location.href = '/ui/dashboard';
+                }, 2000);
+            } else {
+                let errorMessage = "Invalid email or password.";
+                if (typeof responseData === 'object' && responseData && responseData.message) {
+                    errorMessage = responseData.message;
+                }
+                messageBox.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            messageBox.innerHTML = `<p class="text-red-500">Login failed: ${error.message}. Please try again.</p>`;
+        } finally {
+            if (loginButton.disabled) {
+                loginButton.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Sign In';
+                loginButton.disabled = false;
+            }
         }
     });
 </script>

@@ -72,18 +72,20 @@ const MemberController = {
         try {
             const {Email, Password} = req.body;
             if (!Email) {
-                return res.status(404).json({ message: 'Member not found' });
+                return res.status(400).json({ message: 'Email is required' });
             }
             if (!Password) {
                 return res.status(400).json({ message: 'Password is required' });
             }
-            const member = await MemberService.isPasswordValid(Email, Password);
-            if (!member) {
-                return res.status(401).json({ message: 'Invalid password' });
+            const validationResult = await MemberService.isPasswordValid(Email, Password);
+
+            if (!validationResult || !validationResult.success) {
+                return res.status(401).json({ valid: false, message: validationResult.message || 'Invalid credentials' });
             }
-            res.status(200).json({ message: 'Password is valid' });
+            // On success, include 'valid: true'
+            res.status(200).json({ valid: true, message: validationResult.message || 'Password is valid' });
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ valid: false, message: error.message });
         }
     },
 
@@ -96,6 +98,9 @@ const MemberController = {
     createMember: async (req, res) => {
         try {
             const CompanyID = req.params.CompanyID;
+            if (!CompanyID) {
+                return res.status(404).json({ message: 'Company not found' });
+            }
             const { Name, Email, Password, Position} = req.body;
             if (!Name || !Email || !Password || !Position) {
                 return res.status(400).json({ message: 'All fields are required' });

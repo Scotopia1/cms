@@ -46,7 +46,30 @@ const validateMemberId = [
     }
 ];
 
+const validateMemberCredentials = [
+    body('Email')
+        .isEmail()
+        .withMessage('Email must be email')
+        .notEmpty()
+        .withMessage('Email is required'),
+
+    body('Password')
+        .isString()
+        .withMessage('Password must be string')
+        .notEmpty()
+        .withMessage('Password is required'),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    }
+];
+
 module.exports = {
     validateMember,
-    validateMemberId
+    validateMemberId,
+    validateMemberCredentials
 };
